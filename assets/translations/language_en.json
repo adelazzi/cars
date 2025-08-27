@@ -1,0 +1,10 @@
+{
+  "// Validation and input fields": "",
+  "enter_password": "Enter the password",
+  "validator_default_error_message": "Please check the entered data",
+  "phone_validation_message": "Check your phone number, it must start with 05, 06, or 07",
+  "password_validation_message": "The password must contain at least 8 characters",
+  "confirm_password": "Confirm the password"
+
+
+}

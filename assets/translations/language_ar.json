@@ -1,0 +1,11 @@
+{
+  "// Validation and input fields": "",
+  "enter_password": "ادخل كلمة المرور",
+  "validator_default_error_message": "يرجى التحقق من البيانات المدخلة",
+  "phone_validation_message": "تحقق من رقم هاتفك يجب ان يبدا ب 05 او 06 او 07",
+  "password_validation_message": "كلمة المرور يجب ان تحتوي على 8 احرف على الاقل",
+  "confirm_password": "تأكيد كلمة المرور"
+
+
+  
+}
