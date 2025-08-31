@@ -39,7 +39,7 @@ import 'package:get/get.dart';
 //   arabic,
 // }
 class TranslationUtil {
-  static Locale? currentLang = Locale('ar');
+  static Locale? currentLang = Locale('en');
 
   static void changeLang({required TranslationLanguages lang}) {
     String languageCode = 'ar';

@@ -1,5 +1,5 @@
 class AnimationsAssetsConstants {
-  // static const String emptyAnimation = "assets/animations/empty_animation.json";
-
+  static const String carsAnimation = "assets/animations/caranimation.json";
+  static const String loadingAnimation =
+      "assets/animations/Loading_animation_blue.json";
 }
-

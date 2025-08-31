@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:cars/app/core/constants/strings_assets_constants.dart';
 import 'package:cars/app/core/styles/colors.dart';
 import 'package:cars/app/core/styles/text_styles.dart';
 import 'package:cars/app/modules/cart/controllers/cart_controller.dart';
 
 class CartView extends GetView<CartController> {
-  CartView({Key? key}) : super(key: key);
+  const CartView({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -108,7 +108,7 @@ class TextInputComponentWithLabelInBorder extends StatelessWidget {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(13.r),
                 borderSide: BorderSide(
-                  color: MainColors.textColor(context)!,
+                  color: MainColors.primaryColor,
                   width: 2,
                 ),
               ),

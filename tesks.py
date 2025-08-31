@@ -4,7 +4,7 @@ import re
 # Create directories for Flutter/GetX modules
 # This creates the folder structure for 4 different modules: editprofile, notification, notificationsettings, privacy
 # Each module follows the GetX pattern with controllers, bindings, and views folders
-modules = ['login','register','profile','editprofile','notifications','storedetails','cart','mappage','orders','productsetails','descover','splash']
+modules = ['explore']
 folders = ['controllers', 'bindings', 'views']
 
 def create_flutter_getx_structure():

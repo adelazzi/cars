@@ -2,6 +2,9 @@
 
 import 'package:get/get.dart';
 //here add  nesesary imports
+import 'package:cars/app/modules/explore/bindings/explore_binding.dart';
+import 'package:cars/app/modules/explore/views/explore_view.dart';
+
 import 'package:cars/app/modules/login/bindings/login_binding.dart';
 import 'package:cars/app/modules/login/views/login_view.dart';
 import 'package:cars/app/modules/register/bindings/register_binding.dart';
@@ -22,8 +25,6 @@ import 'package:cars/app/modules/orders/bindings/orders_binding.dart';
 import 'package:cars/app/modules/orders/views/orders_view.dart';
 import 'package:cars/app/modules/productsetails/bindings/productsetails_binding.dart';
 import 'package:cars/app/modules/productsetails/views/productsetails_view.dart';
-import 'package:cars/app/modules/descover/bindings/descover_binding.dart';
-import 'package:cars/app/modules/descover/views/descover_view.dart';
 import 'package:cars/app/modules/splash/bindings/splash_binding.dart';
 import 'package:cars/app/modules/splash/views/splash_view.dart';
 
@@ -40,6 +41,12 @@ class AppPages {
   static const INITIAL = Routes.SPLASH;
   static final routes = [
     // hereadd the new files like the others
+    GetPage(
+      name: _Paths.EXPLORE,
+      page: () => ExploreView(),
+      binding: ExploreBinding(),
+    ),
+
     GetPage(
       name: _Paths.LOGIN,
       page: () => LoginView(),
@@ -90,11 +97,7 @@ class AppPages {
       page: () => ProductsetailsView(),
       binding: ProductsetailsBinding(),
     ),
-    GetPage(
-      name: _Paths.DESCOVER,
-      page: () => DescoverView(),
-      binding: DescoverBinding(),
-    ),
+
     GetPage(
       name: _Paths.SPLASH,
       page: () => SplashView(),

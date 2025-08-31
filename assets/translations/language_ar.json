@@ -4,8 +4,28 @@
   "validator_default_error_message": "يرجى التحقق من البيانات المدخلة",
   "phone_validation_message": "تحقق من رقم هاتفك يجب ان يبدا ب 05 او 06 او 07",
   "password_validation_message": "كلمة المرور يجب ان تحتوي على 8 احرف على الاقل",
-  "confirm_password": "تأكيد كلمة المرور"
-
-
-  
+  "confirm_password": "تأكيد كلمة المرور",
+  "loading_experience": "تجربة التحميل",
+  "drive_your_dreams": "سنصل إليك أينما تريد",
+  "welcome_back": "مرحبًا بعودتك",
+  "sign_in_to_continue": "قم بتسجيل الدخول لمتابعة رحلتك",
+  "enter_email": "أدخل بريدك الإلكتروني",
+  "email_address": "عنوان البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "sign_in": "تسجيل الدخول",
+  "dont_have_account": "ليس لديك حساب؟",
+  "sign_up": "اشترك",
+  "forgot_password": "نسيت كلمة المرور",
+  "create_account": "إنشاء حساب",
+  "join_us_today": "انضم إلينا اليوم!",
+  "create_your_account_to_get_started": "قم بإنشاء حسابك للبدء",
+  "first_name": "الاسم الأول",
+  "enter_your_first_name": "أدخل اسمك الأول",
+  "family_name": "اسم العائلة",
+  "enter_your_family_name": "أدخل اسم عائلتك",
+  "phone_number": "رقم الهاتف",
+  "enter_your_phone_number": "أدخل رقم هاتفك",
+  "address": "العنوان",
+  "enter_your_address": "أدخل عنوانك",
+  "already_have_an_account": "هل لديك حساب بالفعل؟"
 }
