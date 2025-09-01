@@ -21,12 +21,10 @@ class ExploreView extends GetView<ExploreController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSearchBar(),
-              TitleSection(
+              FeaturedProducts(
                 title: '🔥 Hot Deals',
                 subtitle: 'Limited time offers',
                 onpressed: () {},
-              ),
-              FeaturedProducts(
                 featuredProducts: controller.featuredProducts,
               ),
               TitleSection(
@@ -37,28 +35,22 @@ class ExploreView extends GetView<ExploreController> {
               TopStores(
                 topStores: controller.topStores,
               ),
-              TitleSection(
+              FeaturedProducts(
                 title: 'electrical',
                 subtitle: 'Limited time offers',
                 onpressed: () {},
-              ),
-              FeaturedProducts(
                 featuredProducts: controller.Productscat1,
               ),
-              TitleSection(
+              FeaturedProducts(
                 title: 'wheels',
                 subtitle: 'Limited time offers',
                 onpressed: () {},
-              ),
-              FeaturedProducts(
                 featuredProducts: controller.Productscat2,
               ),
-              TitleSection(
+              FeaturedProducts(
                 title: 'oil & fluids',
                 subtitle: 'Limited time offers',
                 onpressed: () {},
-              ),
-              FeaturedProducts(
                 featuredProducts: controller.Productscat3,
               ),
               SizedBox(height: 20),

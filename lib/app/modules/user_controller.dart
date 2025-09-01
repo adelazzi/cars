@@ -5,8 +5,8 @@ class UserController extends GetxController {
   var currentUser = UserModel.empty().obs;
 
   void setUser() {
-
     currentUser.value = UserModel(
+      imageProfileUrl: null,
       id: 'user_1',
       name: 'John',
       familyName: 'Doe',
@@ -14,7 +14,6 @@ class UserController extends GetxController {
       address: '456 Another St, Metropolis',
       token: 'token_abc123',
       fcmToken: 'fcm_xyz789',
-      imageProfileUrl: 'https://example.com/profile.jpg',
     );
     update(); // Notify listeners about the change
   }

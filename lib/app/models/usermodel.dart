@@ -46,6 +46,7 @@ class UserModel {
       'imageProfileUrl': imageProfileUrl,
     };
   }
+
   static UserModel empty() {
     return UserModel(
       id: '',
@@ -55,7 +56,7 @@ class UserModel {
       address: '',
       token: '',
       fcmToken: '',
-      imageProfileUrl: '',
+      imageProfileUrl: null,
     );
   }
 }

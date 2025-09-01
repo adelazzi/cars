@@ -3,10 +3,11 @@ import 'package:cars/app/modules/home/views/home_view.dart';
 import 'package:cars/app/modules/orders/views/orders_view.dart';
 import 'package:cars/app/modules/profile/views/profile_view.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:cars/app/core/styles/colors.dart';
 import 'package:cars/app/modules/main/controllers/main_controller.dart';
-
+import 'dart:ui';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MainView extends GetView<MainController> {
@@ -55,7 +56,7 @@ class MainView extends GetView<MainController> {
                 items: [
                   BottomNavigationBarItem(
                     icon: AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
                         color: controller.selectedIndex.value == 0
@@ -63,7 +64,7 @@ class MainView extends GetView<MainController> {
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: Icon(Icons.home_rounded, size: 24.sp),
+                      child: Icon(FontAwesomeIcons.house, size: 24.sp),
                     ),
                     label: 'Home',
                   ),
@@ -77,7 +78,7 @@ class MainView extends GetView<MainController> {
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: Icon(Icons.explore_rounded, size: 24.sp),
+                      child: Icon(FontAwesomeIcons.compass, size: 24.sp),
                     ),
                     label: 'Explore',
                   ),
@@ -91,9 +92,9 @@ class MainView extends GetView<MainController> {
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: Icon(Icons.favorite_rounded, size: 24.sp),
+                      child: Icon(FontAwesomeIcons.cartShopping, size: 24.sp),
                     ),
-                    label: 'Favorites',
+                    label: 'Orders',
                   ),
                   BottomNavigationBarItem(
                     icon: AnimatedContainer(
@@ -105,7 +106,7 @@ class MainView extends GetView<MainController> {
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: Icon(Icons.person_rounded, size: 24.sp),
+                      child: Icon(FontAwesomeIcons.user, size: 24.sp),
                     ),
                     label: 'Profile',
                   ),

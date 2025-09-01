@@ -1,0 +1,125 @@
+import 'package:cars/app/core/styles/colors.dart';
+import 'package:cars/app/core/styles/text_styles.dart';
+import 'package:cars/app/models/carmodel.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class CarCard extends StatelessWidget {
+  final Car car;
+  final VoidCallback? ontap;
+  CarCard({Key? key, required this.car, required this.ontap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: ontap,
+      child: Container(
+        width: 200.w,
+        margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.r),
+          color: MainColors.primaryColor.withOpacity(0.07),
+          boxShadow: [
+            BoxShadow(
+              color: MainColors.shadowColor(context)!,
+              spreadRadius: 1.r,
+              blurRadius: 6.r,
+              offset: Offset(0, 3.h), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              height: 110.h,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(car.type.image), fit: BoxFit.cover),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+                color: MainColors.whiteColor,
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(16.r)),
+                color: MainColors.backgroundColor(context) ?? Colors.white,
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${car.mark} ${car.model}',
+                    style: TextStyles.bodyMedium(context).copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: MainColors.primaryColor,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 4.h),
+                  Row(
+                    children: [
+                      Icon(Icons.calendar_today,
+                          size: 14.sp, color: MainColors.categoryColor),
+                      SizedBox(width: 4.w),
+                      Text('${car.year}', style: TextStyles.bodySmall(context)),
+                      Spacer(),
+                      Icon(Icons.speed,
+                          size: 14.sp, color: MainColors.categoryColor),
+                      SizedBox(width: 4.w),
+                      Text(car.moteur, style: TextStyles.bodySmall(context)),
+                    ],
+                  ),
+                  SizedBox(height: 6.h),
+                  Row(
+                    children: [
+                      Icon(Icons.local_gas_station,
+                          size: 14.sp, color: MainColors.categoryColor),
+                      SizedBox(width: 4.w),
+                      Text(
+                        car.energie.name,
+                        style: TextStyles.bodySmall(context),
+                      ),
+                      Spacer(),
+                      Icon(
+                        car.boiteVitesse == Transmission.automatic
+                            ? Icons.settings
+                            : Icons.settings_outlined,
+                        size: 14.sp,
+                        color: MainColors.categoryColor,
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        car.boiteVitesse.name,
+                        style: TextStyles.bodySmall(context),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.h),
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                    decoration: BoxDecoration(
+                      color: MainColors.primaryColor.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Text(
+                      car.type.displayName,
+                      style: TextStyles.bodySmall(context).copyWith(
+                        color: MainColors.primaryColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
