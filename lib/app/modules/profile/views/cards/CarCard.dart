@@ -1,18 +1,60 @@
 import 'package:cars/app/core/styles/colors.dart';
 import 'package:cars/app/core/styles/text_styles.dart';
-import 'package:cars/app/models/carmodel.dart';
+import 'package:cars/app/models/frombackend/carmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 class CarCard extends StatelessWidget {
   final Car car;
   final VoidCallback? ontap;
-  CarCard({Key? key, required this.car, required this.ontap}) : super(key: key);
+  const CarCard({Key? key, required this.car, this.ontap}) : super(key: key);
+
+  // Get appropriate car image based on type
+  String _getCarImagePath(CarType type) {
+    switch (type) {
+      case CarType.voiture:
+        return 'assets/images/cars/car.png';
+      case CarType.motos_scooters:
+        return 'assets/images/cars/motorcycle.png';
+      case CarType.fourgon:
+        return 'assets/images/cars/van.png';
+      case CarType.camion:
+        return 'assets/images/cars/truck.png';
+      case CarType.bus:
+        return 'assets/images/cars/bus.png';
+      case CarType.tracteur:
+        return 'assets/images/cars/tractor.png';
+    }
+  }
+
+  // Get icon for transmission type
+  IconData _getTransmissionIcon(Transmission transmission) {
+    switch (transmission) {
+      case Transmission.automatic:
+        return Icons.autorenew;
+      case Transmission.manual:
+        return Icons.drive_eta;
+      case Transmission.SemiAutomatic:
+        return Icons.compare_arrows;
+    }
+  }
+
+  // Get icon for fuel type
+  IconData _getFuelIcon(FuelType fuelType) {
+    switch (fuelType) {
+      case FuelType.electric:
+        return Icons.electric_car;
+      case FuelType.hybrid:
+        return Icons.battery_charging_full;
+      default:
+        return Icons.local_gas_station;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: ontap,
+      borderRadius: BorderRadius.circular(16.r),
       child: Container(
         width: 200.w,
         margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
@@ -24,7 +66,7 @@ class CarCard extends StatelessWidget {
               color: MainColors.shadowColor(context)!,
               spreadRadius: 1.r,
               blurRadius: 6.r,
-              offset: Offset(0, 3.h), // changes position of shadow
+              offset: Offset(0, 3.h),
             ),
           ],
         ),
@@ -35,7 +77,8 @@ class CarCard extends StatelessWidget {
               height: 110.h,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage(car.type.image), fit: BoxFit.cover),
+                    image: AssetImage(_getCarImagePath(car.type)), 
+                    fit: BoxFit.cover),
                 borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
                 color: MainColors.whiteColor,
               ),
@@ -70,30 +113,29 @@ class CarCard extends StatelessWidget {
                       Icon(Icons.speed,
                           size: 14.sp, color: MainColors.categoryColor),
                       SizedBox(width: 4.w),
-                      Text(car.moteur, style: TextStyles.bodySmall(context)),
+                      Text(car.moteur.isEmpty ? 'N/A' : car.moteur, 
+                           style: TextStyles.bodySmall(context)),
                     ],
                   ),
                   SizedBox(height: 6.h),
                   Row(
                     children: [
-                      Icon(Icons.local_gas_station,
+                      Icon(_getFuelIcon(car.energie),
                           size: 14.sp, color: MainColors.categoryColor),
                       SizedBox(width: 4.w),
                       Text(
-                        car.energie.name,
+                        car.energie.name.capitalize(),
                         style: TextStyles.bodySmall(context),
                       ),
                       Spacer(),
                       Icon(
-                        car.boiteVitesse == Transmission.automatic
-                            ? Icons.settings
-                            : Icons.settings_outlined,
+                        _getTransmissionIcon(car.boiteVitesse),
                         size: 14.sp,
                         color: MainColors.categoryColor,
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        car.boiteVitesse.name,
+                        car.boiteVitesse.name.capitalize(),
                         style: TextStyles.bodySmall(context),
                       ),
                     ],
@@ -121,5 +163,12 @@ class CarCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+// Extension to capitalize the first letter of strings
+extension StringExtension on String {
+  String capitalize() {
+    return isEmpty ? '' : '${this[0].toUpperCase()}${substring(1)}';
   }
 }

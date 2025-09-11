@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:cars/app/models/CarsBrandmodel.dart';
-import 'package:cars/app/models/carmodel.dart';
-import 'package:cars/app/models/usermodel.dart';
+import 'package:cars/app/models/frombackend/carmodel.dart';
+import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:cars/app/modules/main/controllers/main_controller.dart';
 import 'package:cars/app/modules/user_controller.dart';
 import 'package:get/get.dart';

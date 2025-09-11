@@ -1,10 +1,10 @@
-import 'package:cars/app/models/storemodel.dart';
+import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:cars/app/modules/home/views/cards/storecard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TopStores extends StatelessWidget {
-  final List<Store> topStores;
+  final List<UserModel> topStores;
 
   const TopStores({Key? key, required this.topStores}) : super(key: key);
 

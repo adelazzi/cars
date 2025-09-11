@@ -70,7 +70,6 @@ class ProfileView extends GetView<ProfileController> {
             )),
     );
   }
-
   Widget _buildProfileHeader(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -83,14 +82,14 @@ class ProfileView extends GetView<ProfileController> {
         children: [
           Stack(
             children: [
-              usercontroller.currentUser.value.imageProfileUrl != null
+              usercontroller.currentUser.value.profileImage != null &&
+                      usercontroller.currentUser.value.profileImage!.isNotEmpty
                   ? CircleAvatar(
                       radius: 40.r,
                       backgroundColor: MainColors.primaryColor.withOpacity(0.2),
                       backgroundImage: NetworkImage(
-                          usercontroller.currentUser.value.imageProfileUrl!
-                          // ?? StringsAssets.defaultAvatar
-                          ),
+                        usercontroller.currentUser.value.profileImage!,
+                      ),
                     )
                   : CircleAvatar(
                       radius: 40.r,
@@ -122,13 +121,12 @@ class ProfileView extends GetView<ProfileController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${usercontroller.currentUser.value.name ?? 'User'} ${usercontroller.currentUser.value.familyName ?? ''}',
+                  usercontroller.currentUser.value.name ?? 'User',
                   style: TextStyles.titleMedium(context),
                 ),
                 SizedBox(height: 5.h),
                 Text(
-                  usercontroller.currentUser.value.phoneNumber ??
-                      'Add phone number',
+                  usercontroller.currentUser.value.phoneNumber ?? 'Add phone number',
                   style: TextStyles.bodySmall(context),
                 ),
                 SizedBox(height: 5.h),
@@ -139,19 +137,50 @@ class ProfileView extends GetView<ProfileController> {
                     SizedBox(width: 4.w),
                     Expanded(
                       child: Text(
-                        usercontroller.currentUser.value.address ??
-                            'Add address',
+                        _formatLocation(usercontroller.currentUser.value),
                         style: TextStyles.bodySmall(context),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
+                if (usercontroller.currentUser.value.verified)
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.h),
+                    child: Row(
+                      children: [
+                        Icon(Icons.verified, 
+                          size: 16.sp, 
+                          color: MainColors.primaryColor),
+                        SizedBox(width: 4.w),
+                        Text(
+                          'Verified Account',
+                          style: TextStyles.bodySmall(context).copyWith(
+                            color: MainColors.primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  String _formatLocation(dynamic user) {
+    if (user.address != null && user.address!.isNotEmpty) {
+      String location = user.address!;
+      if (user.commune != null && user.commune!.isNotEmpty) {
+        location += ', ${user.commune}';
+      }
+      if (user.wilaya != null && user.wilaya!.isNotEmpty) {
+        location += ', ${user.wilaya}';
+      }
+      return location;
+    }
+    return 'Add address';
   }
 }

@@ -1,4 +1,4 @@
-import 'package:cars/app/models/usermodel.dart';
+import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:get/get.dart';
 
 class UserController extends GetxController {
@@ -6,14 +6,16 @@ class UserController extends GetxController {
 
   void setUser() {
     currentUser.value = UserModel(
-      imageProfileUrl: null,
       id: 'user_1',
-      name: 'John',
-      familyName: 'Doe',
+      name: 'John Doe',
       phoneNumber: '+1234567890',
       address: '456 Another St, Metropolis',
-      token: 'token_abc123',
       fcmToken: 'fcm_xyz789',
+      profileImage: null,
+      userType: UserType.client,
+      verified: false,
+      premium: false,
+      rating: 0.0,
     );
     update(); // Notify listeners about the change
   }

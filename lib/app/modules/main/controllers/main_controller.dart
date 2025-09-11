@@ -1,4 +1,4 @@
-import 'package:cars/app/models/usermodel.dart';
+import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:get/get.dart';
 
 class MainController extends GetxController {

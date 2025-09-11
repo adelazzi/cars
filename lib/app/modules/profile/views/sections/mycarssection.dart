@@ -1,6 +1,6 @@
 import 'package:cars/app/core/styles/colors.dart';
 import 'package:cars/app/core/styles/text_styles.dart';
-import 'package:cars/app/models/carmodel.dart';
+import 'package:cars/app/models/frombackend/carmodel.dart';
 import 'package:cars/app/modules/profile/views/cards/AddCarCard.dart';
 import 'package:cars/app/modules/profile/views/cards/CarCard.dart';
 import 'package:flutter/material.dart';

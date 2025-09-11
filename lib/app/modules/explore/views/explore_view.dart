@@ -47,12 +47,7 @@ class ExploreView extends GetView<ExploreController> {
                 onpressed: () {},
                 featuredProducts: controller.Productscat2,
               ),
-              FeaturedProducts(
-                title: 'oil & fluids',
-                subtitle: 'Limited time offers',
-                onpressed: () {},
-                featuredProducts: controller.Productscat3,
-              ),
+             
               SizedBox(height: 20),
             ],
           ),

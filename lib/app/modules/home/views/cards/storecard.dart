@@ -1,11 +1,10 @@
-import 'package:cars/app/models/storemodel.dart';
+import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cars/app/core/styles/colors.dart';
 import 'package:cars/app/core/styles/text_styles.dart';
-
 class StoreCard extends StatelessWidget {
-  final Store store;
+  final UserModel store;
 
   const StoreCard({Key? key, required this.store}) : super(key: key);
 
@@ -44,11 +43,16 @@ class StoreCard extends StatelessWidget {
                   ],
                   gradient: MainColors.primaryGradientColor,
                   borderRadius: BorderRadius.circular(12.r),
-                  image: DecorationImage(
-                    image: NetworkImage(store.image),
-                    fit: BoxFit.cover,
-                  ),
+                  image: store.profileImage != null && store.profileImage!.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(store.profileImage!),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
                 ),
+                child: store.profileImage == null || store.profileImage!.isEmpty
+                    ? Icon(Icons.store, color: Colors.white, size: 24.sp)
+                    : null,
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -58,7 +62,7 @@ class StoreCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          store.name,
+                          store.name ?? 'Unknown Store',
                           style: TextStyles.bodyMedium(context)
                               .copyWith(fontWeight: FontWeight.bold),
                         ),
@@ -75,11 +79,11 @@ class StoreCard extends StatelessWidget {
                     Row(
                       children: [
                         Icon(Icons.star, color: Colors.amber, size: 14.sp),
+                        SizedBox(width: 4.w),
                         Text(
-                          '${store.rating} • ${store.productsCount} products',
+                          '${store.rating.toStringAsFixed(1)}',
                           style: TextStyles.bodySmall(context).copyWith(
-                            color: MainColors.textColor(context)
-                                    ?.withOpacity(0.6) ??
+                            color: MainColors.textColor(context)?.withOpacity(0.6) ?? 
                                 Colors.grey[600],
                           ),
                         ),
@@ -91,33 +95,37 @@ class StoreCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: MainColors.successColor(context)?.withOpacity(0.1) ??
-                  Colors.green.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(
-                color: MainColors.successColor(context)?.withOpacity(0.3) ??
-                    Colors.green.withOpacity(0.3),
+          if (store.premium) ...[
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: MainColors.successColor(context)?.withOpacity(0.1) ??
+                    Colors.green.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20.r),
+                border: Border.all(
+                  color: MainColors.successColor(context)?.withOpacity(0.3) ??
+                      Colors.green.withOpacity(0.3),
+                ),
+              ),
+              child: Text(
+                'Premium Partner',
+                style: TextStyles.bodySmall(context).copyWith(
+                  color: MainColors.successColor(context)?.withOpacity(0.7) ??
+                      Colors.green[700],
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-            child: Text(
-              store.discount,
-              style: TextStyles.bodySmall(context).copyWith(
-                color: MainColors.successColor(context)?.withOpacity(0.7) ??
-                    Colors.green[700],
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          SizedBox(height: 8.h),
+            SizedBox(height: 8.h),
+          ],
           Text(
-            'Trusted seller with fast delivery',
+            store.address ?? '${store.wilaya ?? ""}, ${store.commune ?? ""}',
             style: TextStyles.bodySmall(context).copyWith(
               color: MainColors.textColor(context)?.withOpacity(0.6) ??
                   Colors.grey[600],
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:cars/app/models/ordermodel.dart';
-import 'package:cars/app/models/storemodel.dart';
+import 'package:cars/app/models/frombackend/ordermodel.dart';
+import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -68,33 +68,33 @@ class HomeController extends GetxController {
   }
 
   //////////////////////////// Store section
-  final List<Store> topStores = [
-    Store(
+  final List<UserModel> topStores = [
+    UserModel(
       name: 'AutoParts Pro',
-      rating: 4.9,
-      productsCount: 15420,
-      image:
+      userType: UserType.store,
+      profileImage:
           'https://img.freepik.com/vecteurs-libre/modele-logo-service-voiture-degrade_23-2149727258.jpg?w=360',
-      verified: true,
-      discount: '15% OFF',
+      disponible: true,
+      address: '15420 products available',
+      weekend: '15% OFF',
     ),
-    Store(
+    UserModel(
       name: 'Speed Motors',
-      rating: 4.7,
-      productsCount: 8350,
-      image:
+      userType: UserType.store,
+      profileImage:
           'https://img.freepik.com/vecteurs-libre/creation-logo-degrade-pieces-automobiles_23-2149460685.jpg',
-      verified: true,
-      discount: 'Free Shipping',
+      disponible: true,
+      address: '8350 products available',
+      weekend: 'Free Shipping',
     ),
-    Store(
+    UserModel(
       name: 'Car Zone Plus',
-      rating: 4.8,
-      productsCount: 12180,
-      image:
+      userType: UserType.store,
+      profileImage:
           'https://img.freepik.com/vecteurs-libre/modele-logo-service-voiture-degrade_23-2149727273.jpg?w=360',
-      verified: false,
-      discount: '20% OFF',
+      disponible: false,
+      address: '12180 products available',
+      weekend: '20% OFF',
     ),
   ];
 }

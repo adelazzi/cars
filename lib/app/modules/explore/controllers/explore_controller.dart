@@ -1,102 +1,102 @@
 import 'package:cars/app/models/brandmodel.dart';
 import 'package:cars/app/models/CarsBrandmodel.dart';
-import 'package:cars/app/models/storemodel.dart';
+import 'package:cars/app/models/frombackend/subcategory.dart';
+import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:get/get.dart';
 
-import '../../../models/productmodel.dart';
+import '../../../models/frombackend/productmodel.dart';
 
 class ExploreController extends GetxController {
   var currentBannerIndex = 0.obs;
   var selectedCategory = 'All'.obs;
   var searchQuery = ''.obs;
 
-  final List<String> categories = [
-    'All',
-    'Engine',
-    'Brakes',
-    'Suspension',
-    'Electrical',
-    'Body'
-  ];
+  final List<CategoryEnum> categories = CategoryEnum.values;
 
   final List<Product> featuredProducts = [
     Product(
-      discount: 10,
+      storeId: 9,
+      categoryId: 9,
       name: 'Brake Pads Set',
-      brand: 'Brembo',
+      description: 'High-performance brake pads for safe braking.',
       price: 89.99,
-      originalPrice: 129.99,
-      rating: 4.8,
-      image:
+      promotionPrice: 79.99,
+      imageUrl:
           'https://img.freepik.com/photos-gratuite/composition-differents-accessoires-voiture_23-2149030397.jpg?w=360',
-      category: 'Brakes',
-      inStock: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
     Product(
-      discount: 10,
+      storeId: 10,
+      categoryId: 10,
       name: 'LED Headlights',
-      brand: 'Philips',
+      description: 'Bright and energy-efficient LED headlights.',
       price: 159.99,
-      originalPrice: 199.99,
-      rating: 4.9,
-      image:
+      promotionPrice: 149.99,
+      imageUrl:
           'https://img.freepik.com/psd-gratuit/amortisseur-automobile-rendu-3d-fond-transparent_363450-6579.jpg',
-      category: 'Electrical',
-      inStock: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
     Product(
-      discount: 10,
+      storeId: 11,
+      categoryId: 11,
       name: 'Air Filter',
-      brand: 'K&N',
+      description: 'Durable air filter for improved engine performance.',
       price: 45.99,
-      originalPrice: 59.99,
-      rating: 4.7,
-      image:
+      promotionPrice: 39.99,
+      imageUrl:
           'https://img.freepik.com/photos-gratuite/differents-assortiments-accessoires-voiture_23-2149030432.jpg',
-      category: 'Engine',
-      inStock: false,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
     Product(
-      discount: 10,
+      storeId: 12,
+      categoryId: 12,
       name: 'Shock Absorbers',
-      brand: 'Bilstein',
+      description: 'Reliable shock absorbers for a smooth ride.',
       price: 299.99,
-      originalPrice: 399.99,
-      rating: 4.8,
-      image:
+      promotionPrice: 269.99,
+      imageUrl:
           'https://img.freepik.com/photos-gratuite/led-phare-voiture-bleue_23-2147962992.jpg?w=360',
-      category: 'Suspension',
-      inStock: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
   ];
 
-  final List<Store> topStores = [
-    Store(
+  final List<UserModel> topStores = [
+    UserModel(
       name: 'AutoParts Pro',
-      rating: 4.9,
-      productsCount: 15420,
-      image:
-          'https://img.freepik.com/vecteurs-libre/modele-logo-service-voiture-degrade_23-2149727258.jpg?w=360',
-      verified: true,
-      discount: '15% OFF',
+      disponible: true,
+      address: '123 Main Street',
+      phoneNumber: '123-456-7890',
+      email: 'contact@autopartspro.com',
+      userType: UserType.store,
+      fcmToken: 'token123',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
-    Store(
+    UserModel(
       name: 'Speed Motors',
-      rating: 4.7,
-      productsCount: 8350,
-      image:
-          'https://img.freepik.com/vecteurs-libre/creation-logo-degrade-pieces-automobiles_23-2149460685.jpg',
-      verified: true,
-      discount: 'Free Shipping',
+      disponible: true,
+      address: '456 Elm Street',
+      phoneNumber: '987-654-3210',
+      email: 'info@speedmotors.com',
+      userType: UserType.store,
+      fcmToken: 'token456',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
-    Store(
+    UserModel(
       name: 'Car Zone Plus',
-      rating: 4.8,
-      productsCount: 12180,
-      image:
-          'https://img.freepik.com/vecteurs-libre/modele-logo-service-voiture-degrade_23-2149727273.jpg?w=360',
-      verified: false,
-      discount: '20% OFF',
+      disponible: false,
+      address: '789 Oak Avenue',
+      phoneNumber: '555-123-4567',
+      email: 'support@carzoneplus.com',
+      userType: UserType.store,
+      fcmToken: 'token789',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
   ];
 
@@ -108,157 +108,105 @@ class ExploreController extends GetxController {
           ))
       .toList()
       .sublist(1, 10);
-
   final List<Product> Productscat1 = [
     Product(
-      discount: 15,
+      storeId: 1,
+      categoryId: 1,
       name: 'All-Season Tires',
-      brand: 'Michelin',
+      description: 'High-quality all-season tires for your vehicle.',
       price: 499.99,
-      originalPrice: 599.99,
-      rating: 4.9,
-      image:
+      promotionPrice: 424.99,
+      imageUrl:
           'https://img.freepik.com/photos-gratuite/pneu-voiture-neuf_23-2147962993.jpg?w=360',
-      category: 'Body',
-      inStock: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
     Product(
-      discount: 20,
+      storeId: 2,
+      categoryId: 2,
       name: 'Car Battery',
-      brand: 'Bosch',
+      description: 'Reliable car battery with long-lasting performance.',
       price: 129.99,
-      originalPrice: 159.99,
-      rating: 4.8,
-      image:
+      promotionPrice: 103.99,
+      imageUrl:
           'https://img.freepik.com/photos-gratuite/batterie-voiture-isolee_23-2147962994.jpg?w=360',
-      category: 'Electrical',
-      inStock: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
     Product(
-      discount: 25,
+      storeId: 3,
+      categoryId: 3,
       name: 'Oil Filter',
-      brand: 'Mobil 1',
+      description: 'Efficient oil filter for optimal engine performance.',
       price: 19.99,
-      originalPrice: 24.99,
-      rating: 4.7,
-      image:
+      promotionPrice: 14.99,
+      imageUrl:
           'https://img.freepik.com/photos-gratuite/filtre-huile-voiture_23-2147962995.jpg?w=360',
-      category: 'Engine',
-      inStock: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
     Product(
-      discount: 10,
+      storeId: 4,
+      categoryId: 4,
       name: 'Wiper Blades',
-      brand: 'Rain-X',
+      description: 'Durable wiper blades for clear visibility.',
       price: 29.99,
-      originalPrice: 34.99,
-      rating: 4.6,
-      image:
+      promotionPrice: 26.99,
+      imageUrl:
           'https://img.freepik.com/photos-gratuite/essuie-glace-voiture_23-2147962996.jpg?w=360',
-      category: 'Body',
-      inStock: false,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
   ];
 
   final List<Product> Productscat2 = [
     Product(
-      discount: 15,
-      name: 'All-Season Tires',
-      brand: 'Michelin',
-      price: 499.99,
-      originalPrice: 599.99,
-      rating: 4.9,
-      image:
-          'https://img.freepik.com/photos-gratuite/pneu-voiture-neuf_23-2147962993.jpg?w=360',
-      category: 'Body',
-      inStock: true,
-    ),
-    Product(
-      discount: 20,
-      name: 'Car Battery',
-      brand: 'Bosch',
-      price: 129.99,
-      originalPrice: 159.99,
-      rating: 4.8,
-      image:
-          'https://img.freepik.com/photos-gratuite/batterie-voiture-isolee_23-2147962994.jpg?w=360',
-      category: 'Electrical',
-      inStock: true,
-    ),
-    Product(
-      discount: 25,
-      name: 'Oil Filter',
-      brand: 'Mobil 1',
-      price: 19.99,
-      originalPrice: 24.99,
-      rating: 4.7,
-      image:
-          'https://img.freepik.com/photos-gratuite/filtre-huile-voiture_23-2147962995.jpg?w=360',
-      category: 'Engine',
-      inStock: true,
-    ),
-    Product(
-      discount: 10,
-      name: 'Wiper Blades',
-      brand: 'Rain-X',
-      price: 29.99,
-      originalPrice: 34.99,
-      rating: 4.6,
-      image:
-          'https://img.freepik.com/photos-gratuite/essuie-glace-voiture_23-2147962996.jpg?w=360',
-      category: 'Body',
-      inStock: false,
-    ),
-  ];
-
-  final List<Product> Productscat3 = [
-    Product(
-      discount: 10,
+      storeId: 5,
+      categoryId: 5,
       name: 'Synthetic Motor Oil',
-      brand: 'Castrol',
+      description: 'Premium synthetic motor oil for engine protection.',
       price: 39.99,
-      originalPrice: 49.99,
-      rating: 4.8,
-      image:
+      promotionPrice: 34.99,
+      imageUrl:
           'https://img.freepik.com/vecteurs-libre/banniere-huile-moteur-boite-plastique-realiste-pour-huile-moteur_1284-58774.jpg?w=360',
-      category: 'Oil & Fluids',
-      inStock: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
     Product(
-      discount: 15,
+      storeId: 6,
+      categoryId: 6,
       name: 'Coolant',
-      brand: 'Prestone',
+      description: 'High-performance coolant for engine cooling.',
       price: 24.99,
-      originalPrice: 29.99,
-      rating: 4.7,
-      image:
+      promotionPrice: 21.99,
+      imageUrl:
           'https://img.freepik.com/photos-gratuite/bouteille-liquide-refroidissement_23-2147962998.jpg?w=360',
-      category: 'Oil & Fluids',
-      inStock: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
     Product(
-      discount: 20,
+      storeId: 7,
+      categoryId: 7,
       name: 'Brake Fluid',
-      brand: 'DOT 4',
+      description: 'Reliable brake fluid for smooth braking.',
       price: 14.99,
-      originalPrice: 18.99,
-      rating: 4.6,
-      image:
-'https://img.freepik.com/photos-gratuite/coussinets-rouges-pedale-volant-voiture_114579-4035.jpg?w=360',
-      category: 'Oil & Fluids',
-      inStock: true,
+      promotionPrice: 12.99,
+      imageUrl:
+          'https://img.freepik.com/photos-gratuite/coussinets-rouges-pedale-volant-voiture_114579-4035.jpg?w=360',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
     Product(
-      discount: 10,
+      storeId: 8,
+      categoryId: 8,
       name: 'Transmission Fluid',
-      brand: 'Valvoline',
+      description: 'High-quality transmission fluid for smooth shifting.',
       price: 29.99,
-      originalPrice: 34.99,
-      rating: 4.7,
-      image:
+      promotionPrice: 26.99,
+      imageUrl:
           'https://img.freepik.com/photos-gratuite/bouteille-liquide-transmission_23-2147963000.jpg?w=360',
-      category: 'Oil & Fluids',
-      inStock: false,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     ),
   ];
 }

@@ -1,7 +1,7 @@
 import 'package:cars/app/core/components/others/titelsection.dart';
 import 'package:cars/app/core/constants/images_assets_constants.dart';
 import 'package:cars/app/core/styles/colors.dart';
-import 'package:cars/app/models/productmodel.dart';
+import 'package:cars/app/models/frombackend/productmodel.dart';
 import 'package:cars/app/modules/explore/views/cards/productcard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
