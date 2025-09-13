@@ -61,7 +61,7 @@ class ToastComponent {
             type == ToastTypes.success
                 ? FontAwesomeIcons.check
                 : type == ToastTypes.error
-                    ? FontAwesomeIcons.cross
+                    ? FontAwesomeIcons.xmark
                     : type == ToastTypes.info || type == ToastTypes.copies
                         ? FontAwesomeIcons.circleInfo
                         : FontAwesomeIcons.circleExclamation,

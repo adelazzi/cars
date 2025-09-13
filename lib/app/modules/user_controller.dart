@@ -1,22 +1,23 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:get/get.dart';
 
 class UserController extends GetxController {
-  var currentUser = UserModel.empty().obs;
+  Rx<UserModel> currentUser = UserModel.empty().obs;
+  String Token = '';
 
-  void setUser() {
-    currentUser.value = UserModel(
-      id: 'user_1',
-      name: 'John Doe',
-      phoneNumber: '+1234567890',
-      address: '456 Another St, Metropolis',
-      fcmToken: 'fcm_xyz789',
-      profileImage: null,
-      userType: UserType.client,
-      verified: false,
-      premium: false,
-      rating: 0.0,
-    );
+  void RefreshUserData() async{
+  await  UserModel.getUserById(currentUser.value.id!).then((updatedUser) {
+      if (updatedUser != null) {
+        currentUser.value = updatedUser;
+      }
+    }).catchError((error) {
+      // Handle error if needed
+      print('Error refreshing user data: $error');
+    });
     update(); // Notify listeners about the change
   }
+
+  Future<void> logout() async {}
 }

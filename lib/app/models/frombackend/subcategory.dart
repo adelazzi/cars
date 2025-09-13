@@ -1,3 +1,4 @@
+import 'package:cars/app/core/services/http_client_service.dart';
 import 'package:flutter/foundation.dart';
 
 enum CategoryEnum {
@@ -60,4 +61,34 @@ class SubCategory {
       'updated_at': updatedAt.toIso8601String(),
     };
   }
+
+
+
+
+
+
+  /////// API Methods ///////
+
+  static Future<List<SubCategory>> fetchAll({String? q , bool? ar }) async {
+    final response = await HttpClientService.sendRequest(
+      endPoint: '/subcategory/all',
+      requestType: HttpRequestTypes.get,
+      queryParameters: q != null ? {'q': q} : null,
+      header: ar != null ? {'lang': 'ar'} : null,
+    );
+
+    if (response != null &&
+        response.statusCode == 200 &&
+        response.body is List) {
+      return (response.body as List)
+          .map((item) => SubCategory.fromJson(item as Map<String, dynamic>))
+          .toList();
+    }
+    return [];
+  }
+
+
+
+
+
 }

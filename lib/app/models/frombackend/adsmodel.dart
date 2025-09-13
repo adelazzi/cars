@@ -1,3 +1,5 @@
+import 'package:cars/app/core/services/http_client_service.dart';
+
 class AdsModel {
   final int storeId;
   final String title;
@@ -36,4 +38,59 @@ class AdsModel {
       'created_at': createdAt.toIso8601String(),
     };
   }
+
+
+    /////// API Methods ///////
+
+
+    static Future<List<AdsModel>> fetchAll() async {
+      final response = await HttpClientService.sendRequest(
+        endPoint: '/ads',
+        requestType: HttpRequestTypes.get,
+        onError: (errors, _) => throw Exception(errors.join(', ')),
+      );
+
+      if (response != null && response.body is List) {
+        return (response.body as List)
+            .map((json) => AdsModel.fromJson(json))
+            .toList();
+      }
+      throw Exception('Failed to fetch ads');
+    }
+
+    static Future<AdsModel> create(Map<String, dynamic> data) async {
+      final response = await HttpClientService.sendRequest(
+        endPoint: '/ads',
+        requestType: HttpRequestTypes.post,
+        data: data,
+        onError: (errors, _) => throw Exception(errors.join(', ')),
+      );
+
+      if (response != null && response.body is Map<String, dynamic>) {
+        return AdsModel.fromJson(response.body);
+      }
+      throw Exception('Failed to create ad');
+    }
+
+    static Future<AdsModel> update(int id, AdsModel adsModel) async {
+      final response = await HttpClientService.sendRequest(
+      endPoint: '/ads/$id',
+      requestType: HttpRequestTypes.put,
+      data: adsModel.toJson(),
+      onError: (errors, _) => throw Exception(errors.join(', ')),
+      );
+
+      if (response != null && response.body is Map<String, dynamic>) {
+      return AdsModel.fromJson(response.body);
+      }
+      throw Exception('Failed to update ad');
+    }
+
+    static Future<void> remove(int id) async {
+      await HttpClientService.sendRequest(
+        endPoint: '/ads/$id',
+        requestType: HttpRequestTypes.delete,
+        onError: (errors, _) => throw Exception(errors.join(', ')),
+      );
+    }
 }

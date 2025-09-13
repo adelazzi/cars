@@ -1,3 +1,5 @@
+import 'package:cars/app/core/services/http_client_service.dart';
+
 class OrderModel {
   final int clientId;
   final int? storeId;
@@ -25,31 +27,31 @@ class OrderModel {
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
-      clientId: json['clientId'],
-      storeId: json['storeId'],
-      productId: json['productId'],
-      productName: json['productName'],
+      clientId: json['client_id'],
+      storeId: json['store_id'],
+      productId: json['product_id'],
+      productName: json['product_name'],
       description: json['description'],
-      totalPrice: (json['totalPrice'] as num).toDouble(),
+      totalPrice: (json['total_price'] as num).toDouble(),
       notes: json['notes'],
       status: OrderStatus.fromString(json['status']),
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'clientId': clientId,
-      'storeId': storeId,
-      'productId': productId,
-      'productName': productName,
+      'client_id': clientId,
+      'store_id': storeId,
+      'product_id': productId,
+      'product_name': productName,
       'description': description,
-      'totalPrice': totalPrice,
+      'total_price': totalPrice,
       'notes': notes,
       'status': status.displayName(),
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
     };
   }
 }
@@ -93,4 +95,65 @@ enum OrderStatus {
         throw ArgumentError('Unknown order status: $status');
     }
   }
+
+
+
+    /////// API Methods ///////
+    static Future<List<OrderModel>> fetchAllOrders() async {
+      final response = await HttpClientService.sendRequest(
+        endPoint: '/orders',
+        requestType: HttpRequestTypes.get,
+        onError: (errors, _) {
+          throw Exception('Failed to fetch orders: ${errors.join(', ')}');
+        },
+      );
+
+      if (response != null && response.body is List) {
+        return (response.body as List)
+            .map((order) => OrderModel.fromJson(order))
+            .toList();
+      } else {
+        throw Exception('Unexpected response format');
+      }
+    }
+
+    static Future<OrderModel> getOrderDetails(int id) async {
+      final response = await HttpClientService.sendRequest(
+        endPoint: '/orders/$id',
+        requestType: HttpRequestTypes.get,
+        onError: (errors, _) {
+          throw Exception('Failed to fetch order details: ${errors.join(', ')}');
+        },
+      );
+
+      if (response != null && response.body is Map<String, dynamic>) {
+        return OrderModel.fromJson(response.body);
+      } else {
+        throw Exception('Unexpected response format');
+      }
+    }
+
+    static Future<void> updateOrder(int id, OrderModel order) async {
+      await HttpClientService.sendRequest(
+      endPoint: '/orders/$id',
+      requestType: HttpRequestTypes.put,
+      data: order.toJson(),
+      onError: (errors, _) {
+        throw Exception('Failed to update order: ${errors.join(', ')}');
+      },
+      );
+    }
+
+    static Future<void> deleteOrder(int id) async {
+      await HttpClientService.sendRequest(
+        endPoint: '/orders/$id',
+        requestType: HttpRequestTypes.delete,
+        onError: (errors, _) {
+          throw Exception('Failed to delete order: ${errors.join(', ')}');
+        },
+      );
+    }
+
+
+
 }

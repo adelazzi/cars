@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cars/app/core/components/inputs/imagepicker.dart';
 import 'package:cars/app/modules/profile/views/sections/accountoptionsection.dart';
 import 'package:cars/app/modules/profile/views/sections/mycarssection.dart';
 import 'package:cars/app/modules/profile/views/sections/quickqctionsection.dart';
@@ -15,61 +18,66 @@ class ProfileView extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MainColors.backgroundColor(context),
-      appBar: AppBar(
-        elevation: 0,
+    return RefreshIndicator(
+      onRefresh: () async => controller.refreshProfile(),
+      child: Scaffold(
         backgroundColor: MainColors.backgroundColor(context),
-        centerTitle: true,
-        title: Text(
-          'My Profile',
-          style: TextStyles.titleMedium(context)
-              .copyWith(color: MainColors.primaryColor),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh, color: MainColors.primaryColor),
-            onPressed: () {
-              controller.refreshProfile();
-              usercontroller.setUser();
-            },
+        appBar: AppBar(
+          actions: [
+            usercontroller.currentUser.value.verified
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                    child: Icon(Icons.verified,
+                        size: 30.sp, color: MainColors.primaryColor),
+                  )
+                : Container(),
+          ],
+          elevation: 0,
+          backgroundColor: MainColors.backgroundColor(context),
+          centerTitle: true,
+          title: Text(
+            'My Profile',
+            style: TextStyles.titleMedium(context)
+                .copyWith(color: MainColors.primaryColor),
           ),
-        ],
+        ),
+        body: Obx(() => controller.isLoading.value
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildProfileHeader(context),
+                    const SizedBox(height: 20),
+                    QuickActionSection(
+                      navigateToCars: () => controller.navigateToCars(),
+                      navigateToMaintenance: () =>
+                          controller.navigateToMaintenance(),
+                      navigateToFavorites: () =>
+                          controller.navigateToFavorites(),
+                      navigateToHistory: () => controller.navigateToHistory(),
+                    ),
+                    const SizedBox(height: 20),
+                    MyCarsSection(
+                      cars: controller.cars,
+                      onSeeAll: () => controller.navigateToCars(),
+                      onAddCar: () => controller.navigateToAddCar(),
+                      onCarTap: (index) => controller.navigateToEditCar(index),
+                    ),
+                    const SizedBox(height: 20),
+                    AccountOptionSection(
+                      onPaymentMethods: () =>
+                          controller.navigateToPaymentMethods(),
+                      onSupport: () => controller.navigateToSupport(),
+                      onAbout: () => controller.navigateToAbout(),
+                      onLogout: () => controller.logout(),
+                    ),
+                  ],
+                ),
+              )),
       ),
-      body: Obx(() => controller.isLoading.value
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  _buildProfileHeader(context),
-                  const SizedBox(height: 20),
-                  QuickActionSection(
-                    navigateToCars: () => controller.navigateToCars(),
-                    navigateToMaintenance: () =>
-                        controller.navigateToMaintenance(),
-                    navigateToFavorites: () => controller.navigateToFavorites(),
-                    navigateToHistory: () => controller.navigateToHistory(),
-                  ),
-                  const SizedBox(height: 20),
-                  MyCarsSection(
-                    cars: controller.cars,
-                    onSeeAll: () => controller.navigateToCars(),
-                    onAddCar: () => controller.navigateToAddCar(),
-                    onCarTap: (index) => controller.navigateToEditCar(index),
-                  ),
-                  const SizedBox(height: 20),
-                  AccountOptionSection(
-                    onPaymentMethods: () =>
-                        controller.navigateToPaymentMethods(),
-                    onSupport: () => controller.navigateToSupport(),
-                    onAbout: () => controller.navigateToAbout(),
-                    onLogout: () => controller.logout(),
-                  ),
-                ],
-              ),
-            )),
     );
   }
+
   Widget _buildProfileHeader(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -84,11 +92,18 @@ class ProfileView extends GetView<ProfileController> {
             children: [
               usercontroller.currentUser.value.profileImage != null &&
                       usercontroller.currentUser.value.profileImage!.isNotEmpty
-                  ? CircleAvatar(
-                      radius: 40.r,
-                      backgroundColor: MainColors.primaryColor.withOpacity(0.2),
-                      backgroundImage: NetworkImage(
-                        usercontroller.currentUser.value.profileImage!,
+                  ? Container(
+                      height: 120.h,
+                      width: 100.w,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            usercontroller.currentUser.value.profileImage!,
+                          ),
+                          fit: BoxFit.contain,
+                        ),
+                        borderRadius: BorderRadius.circular(15.r),
+                        color: MainColors.primaryColor.withOpacity(0.2),
                       ),
                     )
                   : CircleAvatar(
@@ -109,7 +124,64 @@ class ProfileView extends GetView<ProfileController> {
                     padding: EdgeInsets.zero,
                     icon: Icon(Icons.camera_alt,
                         size: 15.sp, color: Colors.white),
-                    onPressed: () => controller.updateProfilePicture(),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: Colors.transparent,
+                        builder: (BuildContext context) {
+                          return Container(
+                            padding: EdgeInsets.all(20.r),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface,
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(20.r),
+                              ),
+                            ),
+                            child: CustomImagePicker(
+                              onImageSelected: (File image) {
+                                // Show a confirmation dialog before updating profile picture
+                                Get.defaultDialog(
+                                  title: 'Confirm Update',
+                                  content: Column(
+                                    children: [
+                                      Container(
+                                        height: 150.h,
+                                        width: 150.w,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
+                                          image: DecorationImage(
+                                            image: FileImage(image),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 16.h),
+                                      Text(
+                                          'Are you sure you want to update your profile picture?'),
+                                    ],
+                                  ),
+                                  textConfirm: 'Update',
+                                  textCancel: 'Cancel',
+                                  confirmTextColor: Colors.white,
+                                  onConfirm: () {
+                                    Get.back(); // Close dialog
+                                    controller.updateProfilePicture(image.path);
+                                    controller.isLoading.value = true;
+                                    usercontroller.RefreshUserData();
+                                    controller.isLoading.value = false;
+                                    Get.back();
+                                  },
+                                  onCancel: () {
+                                    Get.back(); // Close dialog
+                                  },
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
                 ),
               )
@@ -126,7 +198,8 @@ class ProfileView extends GetView<ProfileController> {
                 ),
                 SizedBox(height: 5.h),
                 Text(
-                  usercontroller.currentUser.value.phoneNumber ?? 'Add phone number',
+                  usercontroller.currentUser.value.phoneNumber ??
+                      'Add phone number',
                   style: TextStyles.bodySmall(context),
                 ),
                 SizedBox(height: 5.h),
@@ -136,32 +209,16 @@ class ProfileView extends GetView<ProfileController> {
                         size: 16.sp, color: MainColors.primaryColor),
                     SizedBox(width: 4.w),
                     Expanded(
-                      child: Text(
-                        _formatLocation(usercontroller.currentUser.value),
-                        style: TextStyles.bodySmall(context),
-                        overflow: TextOverflow.ellipsis,
+                      child: Container(
+                        padding: EdgeInsets.all(3.r),
+                        child: Text(
+                          _formatLocation(usercontroller.currentUser.value),
+                          style: TextStyles.bodySmall(context),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                if (usercontroller.currentUser.value.verified)
-                  Padding(
-                    padding: EdgeInsets.only(top: 5.h),
-                    child: Row(
-                      children: [
-                        Icon(Icons.verified, 
-                          size: 16.sp, 
-                          color: MainColors.primaryColor),
-                        SizedBox(width: 4.w),
-                        Text(
-                          'Verified Account',
-                          style: TextStyles.bodySmall(context).copyWith(
-                            color: MainColors.primaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
               ],
             ),
           ),

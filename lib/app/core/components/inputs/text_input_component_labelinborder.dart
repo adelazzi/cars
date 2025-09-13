@@ -72,7 +72,10 @@ class TextInputComponentWithLabelInBorder extends StatelessWidget {
             maxLines: maxLines,
             maxLength: maxLength,
             textInputAction: textInputAction ?? TextInputAction.done,
-            style: TextStyles.bodyMedium(context),
+            style: (errorText != null && errorText!.isNotEmpty)
+                ? TextStyles.bodyMedium(context)
+                    .copyWith(color: MainColors.errorColor(context))
+                : TextStyles.bodyMedium(context),
             cursorColor: MainColors.textColor(context),
             decoration: InputDecoration(
               labelText: mustfill ? '$label *' : label,
@@ -107,7 +110,7 @@ class TextInputComponentWithLabelInBorder extends StatelessWidget {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(13.r),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: MainColors.primaryColor,
                   width: 2,
                 ),
@@ -134,11 +137,11 @@ class TextInputComponentWithLabelInBorder extends StatelessWidget {
           ),
         ),
         if (errorText != null && errorText!.isNotEmpty)
-          Padding(
-            padding: EdgeInsets.only(top: 4.h, left: 4.w),
+          Center(
             child: Text(
               errorText!,
               style: TextStyles.bodySmall(context).copyWith(
+                fontWeight: FontWeight.bold,
                 color: MainColors.errorColor(context),
               ),
             ),

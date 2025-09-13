@@ -33,7 +33,7 @@ class CarCard extends StatelessWidget {
         return Icons.autorenew;
       case Transmission.manual:
         return Icons.drive_eta;
-      case Transmission.SemiAutomatic:
+      case Transmission.semiAuto:
         return Icons.compare_arrows;
     }
   }
