@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:cars/app/core/constants/storage_keys_constants.dart';
+import 'package:cars/app/core/services/local_storage_service.dart';
 import 'package:cars/app/models/CarsBrandmodel.dart';
 import 'package:cars/app/models/frombackend/carmodel.dart';
 import 'package:cars/app/models/frombackend/usermodel.dart';
@@ -91,7 +93,7 @@ class ProfileController extends GetxController {
   void navigateToSupport() {}
   void navigateToAbout() {}
   void logout() async {
-    await Get.find<UserController>().logout();
+   await UserModel.logout();
     Get.offAllNamed(Routes.LOGIN);
   }
 

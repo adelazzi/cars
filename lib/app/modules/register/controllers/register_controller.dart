@@ -165,7 +165,7 @@ class RegisterController extends GetxController {
       UserModel? registeredUser = await UserModel.register(
         newUser,
       );
-
+      await updateProfilePicture();
       isLoading.value = false;
       Get.back(); // Close loading dialog
 
@@ -197,6 +197,34 @@ class RegisterController extends GetxController {
         message: 'An error occurred: $error',
         type: ToastTypes.error,
       );
+    }
+  }
+
+  Future<void> updateProfilePicture() async {
+    try {
+      isLoading.value = true;
+
+      final userId = Get.find<UserController>().currentUser.value.id;
+      if (userId == null) {
+        Get.snackbar('Error', 'User ID not found');
+        return;
+      }
+
+      final result = await UserModel.uploadProfileImage(
+        userId: userId,
+        filePath: selectedImage.value!.path,
+      );
+
+      if (result) {
+        Get.snackbar('Success', 'Profile picture updated successfully');
+      } else {
+        Get.snackbar('Error', 'Failed to update profile picture');
+      }
+    } catch (e) {
+      log('Error updating profile picture: $e');
+      Get.snackbar('Error', 'An error occurred while updating profile picture');
+    } finally {
+      isLoading.value = false;
     }
   }
 }

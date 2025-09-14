@@ -1,6 +1,7 @@
 
 
 
+import 'package:cars/app/core/constants/end_points_constants.dart';
 import 'package:cars/app/core/services/http_client_service.dart';
 
 class Car {
@@ -73,7 +74,7 @@ class Car {
 
   static Future<Car> create(Car car) async {
     final response = await HttpClientService.sendRequest(
-      endPoint: '/cars',
+      endPoint:EndPointsConstants.carApi,
       requestType: HttpRequestTypes.post,
       data: car.toJson(),
       onError: (errors, _) => throw Exception(errors.join(', ')),

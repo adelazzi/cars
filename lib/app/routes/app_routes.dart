@@ -23,6 +23,7 @@ abstract class Routes {
   static const PRODUCTSETAILS = _Paths.PRODUCTSETAILS;
   static const SPLASH = _Paths.SPLASH;
   static const EXPLORE = _Paths.EXPLORE;
+    static const ADDCAR = _Paths.ADDCAR;
 }
 
 abstract class _Paths {
@@ -42,4 +43,5 @@ abstract class _Paths {
   static const PRODUCTSETAILS = '/productsetails';
   static const SPLASH = '/splash';
   static const EXPLORE = '/explore';
+    static const ADDCAR = '/addcar';
 }

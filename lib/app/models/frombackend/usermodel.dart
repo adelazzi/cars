@@ -524,4 +524,35 @@ class UserModel {
     }
     return null;
   }
+
+  static Future<bool> logout() async {
+    try {
+      final response = await HttpClientService.sendRequest(
+        endPoint: EndPointsConstants.logout,
+        requestType: HttpRequestTypes.post,
+        header: {
+          'authorization': 'Bearer ${Get.find<UserController>().Token}',
+        },
+        onSuccess: (apiResponse) async {
+          log('Logout successful: ${apiResponse.body}');
+          // Clear user data from local storage
+          await LocalStorageService.deleteData(
+              key: StorageKeysConstants.userToken);
+          await LocalStorageService.deleteData(
+              key: StorageKeysConstants.userId);
+          Get.find<UserController>().Token = '';
+          Get.find<UserController>().currentUser.value = UserModel.empty();
+        },
+        onError: (errors, apiResponse) {
+          log('Logout failed: ${errors.join(', ')}');
+        },
+      );
+
+      return response?.statusCode == 200 ||
+          response?.requestStatus == RequestStatus.success;
+    } catch (e) {
+      log('Error during logout: $e');
+    }
+    return false;
+  }
 }

@@ -2,6 +2,9 @@
 
 import 'package:get/get.dart';
 //here add  nesesary imports
+import 'package:cars/app/modules/addcar/bindings/addcar_binding.dart';
+import 'package:cars/app/modules/addcar/views/addcar_view.dart';
+
 import 'package:cars/app/modules/explore/bindings/explore_binding.dart';
 import 'package:cars/app/modules/explore/views/explore_view.dart';
 
@@ -41,6 +44,12 @@ class AppPages {
   static const INITIAL = Routes.SPLASH;
   static final routes = [
     // hereadd the new files like the others
+    GetPage(
+      name: _Paths.ADDCAR,
+      page: () => AddcarView(),
+      binding: AddcarBinding(),
+    ),
+
     GetPage(
       name: _Paths.EXPLORE,
       page: () => ExploreView(),

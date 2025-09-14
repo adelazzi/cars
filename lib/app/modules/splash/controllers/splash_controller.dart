@@ -1,3 +1,8 @@
+import 'dart:developer';
+
+import 'package:cars/app/core/constants/storage_keys_constants.dart';
+import 'package:cars/app/core/services/local_storage_service.dart';
+import 'package:cars/app/modules/user_controller.dart';
 import 'package:cars/app/routes/app_pages.dart';
 import 'package:get/get.dart';
 
@@ -12,8 +17,36 @@ class SplashController extends GetxController {
 
   void nextPage() async {
     // Wait for 2 seconds before navigating to the next page
-    await Future.delayed(Duration(seconds: 2));
-    // Logic to navigate to the next page
-    Get.offNamed(Routes.LOGIN);
+    await Future.delayed(const Duration(seconds: 2));
+
+    try {
+      final token = await LocalStorageService.loadData(
+        key: StorageKeysConstants.userToken,
+        type: DataTypes.string,
+      );
+      final userId = await LocalStorageService.loadData(
+        key: StorageKeysConstants.userId,
+        type: DataTypes.int,
+      );
+
+      if (token != null && userId != null && userId > 0) {
+        final userController = Get.find<UserController>();
+        userController.Token = token;
+        userController.currentUser.value.id = userId;
+        userController.RefreshUserData();
+
+        log('Token: $token');
+        log('UserID: $userId');
+        Get.offNamed(Routes.MAIN);
+      } else {
+        Get.offNamed(Routes.LOGIN);
+      }
+    } catch (e) {
+      log('Error in nextPage: $e');
+      Get.offNamed(Routes.LOGIN);
+    }
   }
+
+
+
 }

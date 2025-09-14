@@ -47,23 +47,23 @@ class ProfileView extends GetView<ProfileController> {
                 child: Column(
                   children: [
                     _buildProfileHeader(context),
-                    const SizedBox(height: 20),
-                    QuickActionSection(
-                      navigateToCars: () => controller.navigateToCars(),
-                      navigateToMaintenance: () =>
-                          controller.navigateToMaintenance(),
-                      navigateToFavorites: () =>
-                          controller.navigateToFavorites(),
-                      navigateToHistory: () => controller.navigateToHistory(),
-                    ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
+                    // QuickActionSection(
+                    //   navigateToCars: () => controller.navigateToCars(),
+                    //   navigateToMaintenance: () =>
+                    //       controller.navigateToMaintenance(),
+                    //   navigateToFavorites: () =>
+                    //       controller.navigateToFavorites(),
+                    //   navigateToHistory: () => controller.navigateToHistory(),
+                    // ),
+                    // SizedBox(height: 20.h),
                     MyCarsSection(
                       cars: controller.cars,
                       onSeeAll: () => controller.navigateToCars(),
                       onAddCar: () => controller.navigateToAddCar(),
                       onCarTap: (index) => controller.navigateToEditCar(index),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                     AccountOptionSection(
                       onPaymentMethods: () =>
                           controller.navigateToPaymentMethods(),
@@ -100,7 +100,7 @@ class ProfileView extends GetView<ProfileController> {
                           image: NetworkImage(
                             usercontroller.currentUser.value.profileImage!,
                           ),
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.circular(15.r),
                         color: MainColors.primaryColor.withOpacity(0.2),
@@ -112,6 +112,7 @@ class ProfileView extends GetView<ProfileController> {
                       child: Icon(
                         Icons.person,
                         color: MainColors.whiteColor,
+                        size: 40.sp,
                       ),
                     ),
               Positioned(
@@ -193,7 +194,8 @@ class ProfileView extends GetView<ProfileController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  usercontroller.currentUser.value.name ?? 'User',
+                  ('${usercontroller.currentUser.value.firstName!} ${usercontroller.currentUser.value.lastName!}') ??
+                      'User',
                   style: TextStyles.titleMedium(context),
                 ),
                 SizedBox(height: 5.h),
@@ -213,6 +215,23 @@ class ProfileView extends GetView<ProfileController> {
                         padding: EdgeInsets.all(3.r),
                         child: Text(
                           _formatLocation(usercontroller.currentUser.value),
+                          style: TextStyles.bodySmall(context),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5.h),
+                Row(
+                  children: [
+                    Icon(Icons.star, size: 20.sp, color: Colors.amber),
+                    SizedBox(width: 4.w),
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.all(3.r),
+                        child: Text(
+                          usercontroller.currentUser.value.rating.toString() ??
+                              '0.0',
                           style: TextStyles.bodySmall(context),
                         ),
                       ),

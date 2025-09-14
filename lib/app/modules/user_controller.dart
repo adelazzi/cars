@@ -19,5 +19,5 @@ class UserController extends GetxController {
     update(); // Notify listeners about the change
   }
 
-  Future<void> logout() async {}
+
 }
