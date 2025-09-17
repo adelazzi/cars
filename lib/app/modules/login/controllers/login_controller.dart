@@ -1,6 +1,11 @@
+import 'dart:developer';
+import 'dart:ffi';
+
 import 'package:cars/app/core/components/others/languagebottomsheet.dart';
 import 'package:cars/app/core/components/others/toast_component.dart';
+import 'package:cars/app/core/constants/end_points_constants.dart';
 import 'package:cars/app/core/constants/storage_keys_constants.dart';
+import 'package:cars/app/core/services/http_client_service.dart';
 import 'package:cars/app/core/services/local_storage_service.dart';
 import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:cars/app/modules/user_controller.dart';
@@ -12,11 +17,20 @@ class LoginController extends GetxController {
   // Add your controller logic here
   RxBool isLoading = false.obs;
   RxBool rememberMe = true.obs;
+  RxBool isconnected = false.obs;
+
   RxBool isPasswordHidden = true.obs;
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
   String? password;
+
+  @override
+  void onInit() async {
+    // TODO: implement onInit
+    super.onInit();
+    isconnected.value = await checkInternet();
+  }
 
   void togglePasswordVisibility() {
     isPasswordHidden.value = !isPasswordHidden.value;
@@ -83,4 +97,20 @@ class LoginController extends GetxController {
   }
 
   void toggleLanguage() {}
+
+  Future<bool> checkInternet() async {
+    try {
+      isLoading.value = true;
+      log("Checking internet connection...");
+      final response = await HttpClientService.get(EndPointsConstants.user);
+      log(response.body.toString());
+      isLoading.value = false;
+      isconnected.value = response.statusCode == 200;
+      return response.statusCode == 200;
+    } catch (e) {
+      isLoading.value = false;
+      log("No internet connection: $e");
+      return false;
+    }
+  }
 }

@@ -1,114 +1,19 @@
 class PaginationModel<Model> {
-  List<Model>? data;
-  Meta? meta;
-  Links? links;
+  int? count;
+  String? next;
+  String? previous;
+  List<Model>? results;
 
-  PaginationModel({this.data, this.meta, this.links});
+  PaginationModel({this.count, this.next, this.previous, this.results});
 
   PaginationModel.fromJson(Map<String, dynamic> json, Function modelFromJson) {
-    if (json['meta'] != null) {
-      meta = Meta.fromJson(json['meta']);
-    }
-    if (json['links'] != null) {
-      links = Links.fromJson(json['links']);
-    }
-    if (json['data'] != null) {
-      data = [];
-      json['data'].forEach((v) {
-        data!.add(modelFromJson(v));
-      });
-    }
-  }
-}
-
-class Meta {
-  int? currentPage;
-  int? from;
-  int? lastPage;
-  List<Link>? links;
-  String? path;
-  int? perPage;
-  int? to;
-  int? total;
-
-  Meta(
-      {this.currentPage,
-      this.from,
-      this.lastPage,
-      this.links,
-      this.path,
-      this.perPage,
-      this.to,
-      this.total});
-
-  Meta.fromJson(Map<String, dynamic> json) {
-    currentPage = json['current_page'];
-    from = json['from'];
-    lastPage = json['last_page'];
-    if (json['links'] != null) {
-      links = <Link>[];
-      json['links'].forEach((v) {
-        links!.add(Link.fromJson(v));
-      });
-    }
-    path = json['path'];
-    perPage = (json['per_page'] is String)
-        ? int.parse(json['per_page'])
-        : json['per_page'];
-    to = json['to'];
-    total = json['total'];
-  }
-}
-
-class Links {
-  String? first;
-  String? last;
-  dynamic prev;
-  String? next;
-
-  Links({this.first, this.last, this.prev, this.next});
-
-  Links.fromJson(Map<String, dynamic> json) {
-    first = json['first'];
-    last = json['last'];
-    prev = json['prev'];
+    count = json['count'];
     next = json['next'];
-  }
-}
-
-class Link {
-  String? url;
-  String? label;
-  bool? active;
-
-  Link({this.url, this.label, this.active});
-
-  Link.fromJson(Map<String, dynamic> json) {
-    url = json['url'];
-    label = json['label'];
-    active = json['active'];
-  }
-}
-
-class Pagination<Model> {
-  List<Model>? data;
-
-  Pagination({
-    this.data,
-  });
-
-  Pagination.fromJson(
-      Map<String, dynamic> json, Model Function(dynamic) modelFromJson) {
-    if (json['data'] != null && json['data'] is List<dynamic>) {
-      data = [];
-      json['data'].forEach((v) {
-        if (v is Model) {
-          data!.add(v);
-        } else {
-          // يمكن أن يكون هناك تحويل يدوي آخر إذا كان ذلك ضروريًا
-          // على سبيل المثال:
-          // data!.add(modelFromJson(v));
-        }
+    previous = json['previous'];
+    if (json['results'] != null) {
+      results = [];
+      json['results'].forEach((v) {
+        results!.add(modelFromJson(v));
       });
     }
   }

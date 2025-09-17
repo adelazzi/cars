@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'dart:developer';
 import 'dart:io';
 
@@ -10,6 +12,69 @@ import 'package:cars/app/modules/register/controllers/register_controller.dart';
 import 'package:cars/app/modules/user_controller.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
+
+class User_brands {
+  int id;
+  String name;
+  String image;
+  User_brands(this.id, this.name, {this.image = ''});
+
+  static Future<List<User_brands>> fetchAllBrands() async {
+    try {
+      final response = await HttpClientService.sendRequest(
+        endPoint: EndPointsConstants.allBrands,
+        requestType: HttpRequestTypes.get,
+        onSuccess: (apiResponse) {
+          log('Fetched all brands successfully: ${apiResponse.body}');
+        },
+        onError: (errors, apiResponse) {
+          log('Failed to fetch brands: ${errors.join(', ')}');
+        },
+      );
+
+      if (response != null && response.body != null) {
+        final List<dynamic> brands = response.body as List<dynamic>;
+        return brands
+            .map((brand) => User_brands(
+                  brand['id'] as int,
+                  brand['name'] as String,
+                ))
+            .toList();
+      }
+    } catch (e) {
+      log('Error during fetching brands: $e');
+    }
+    return [];
+  }
+
+  static Future<List<User_brands>> fetchTopBrands() async {
+    try {
+      final response = await HttpClientService.sendRequest(
+        endPoint: EndPointsConstants.topBrands,
+        requestType: HttpRequestTypes.get,
+        onSuccess: (apiResponse) {
+          log('Fetched top brands successfully: ${apiResponse.body}');
+        },
+        onError: (errors, apiResponse) {
+          log('Failed to fetch top brands: ${errors.join(', ')}');
+        },
+      );
+
+      if (response != null && response.body != null) {
+        final List<dynamic> brands = response.body as List<dynamic>;
+        return brands
+            .map((brand) => User_brands(
+                  brand['id'] as int,
+                  brand['name'] as String,
+                ))
+            .toList();
+      }
+    } catch (e) {
+      log('Error during fetching top brands: $e');
+    }
+    return [];
+  }
+}
 
 enum UserType {
   client,
@@ -64,6 +129,7 @@ class UserModel {
   bool verified;
   bool premium;
   double rating;
+  List<User_brands>? brands;
 
   UserModel({
     this.id,
@@ -88,7 +154,10 @@ class UserModel {
     this.verified = false,
     this.premium = false,
     this.rating = 0.0,
-  });
+    this.brands,
+  }) {
+    brands ??= [];
+  }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -121,6 +190,12 @@ class UserModel {
       verified: json['verfied'] as bool? ?? false,
       premium: json['premuim'] as bool? ?? false,
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      brands: (json['brands'] as List<dynamic>?)
+          ?.map((brand) => User_brands(
+                brand['id'] as int,
+                brand['name'] as String,
+              ))
+          .toList(),
     );
   }
 
@@ -148,6 +223,7 @@ class UserModel {
       'verified': verified,
       'premium': premium,
       'rating': rating,
+      'brands': brands?.map((brand) => brand.id).toList(),
     };
   }
 
@@ -509,7 +585,7 @@ class UserModel {
           'authorization': 'Bearer ${Get.find<UserController>().Token}',
         },
         onSuccess: (apiResponse) {
-          log('Fetched user successfully: ${apiResponse.body}');
+          log('Fetched user successfully');
         },
         onError: (errors, apiResponse) {
           log('Failed to fetch user: ${errors.join(', ')}');
@@ -545,6 +621,37 @@ class UserModel {
         },
         onError: (errors, apiResponse) {
           log('Logout failed: ${errors.join(', ')}');
+        },
+      );
+
+      return response?.statusCode == 200 ||
+          response?.requestStatus == RequestStatus.success;
+    } catch (e) {
+      log('Error during logout: $e');
+    }
+    return false;
+  }
+
+  static Future<bool> ckeckToken() async {
+    try {
+      final response = await HttpClientService.sendRequest(
+        endPoint: EndPointsConstants.checkToken,
+        requestType: HttpRequestTypes.get,
+        header: {
+          'authorization': 'Bearer ${Get.find<UserController>().Token}',
+        },
+        onSuccess: (apiResponse) async {
+          log('Logout successful: ${apiResponse.body}');
+        },
+        onError: (errors, apiResponse) async {
+          await LocalStorageService.deleteData(
+              key: StorageKeysConstants.userToken);
+          await LocalStorageService.deleteData(
+              key: StorageKeysConstants.userId);
+          Get.find<UserController>().Token = '';
+          Get.find<UserController>().currentUser.value = UserModel.empty();
+
+          log('Token expired: ${errors.join(', ')}');
         },
       );
 

@@ -10,14 +10,12 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 class MyCarsSection extends StatelessWidget {
   final RxList<Car> cars;
-  final VoidCallback onSeeAll;
   final VoidCallback onAddCar;
   final void Function(int) onCarTap;
 
   const MyCarsSection({
     Key? key,
     required this.cars,
-    required this.onSeeAll,
     required this.onAddCar,
     required this.onCarTap,
   }) : super(key: key);
@@ -39,14 +37,6 @@ class MyCarsSection extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('My Cars', style: TextStyles.titleSmall(context)),
-                    TextButton(
-                      onPressed: onSeeAll,
-                      child: Text(
-                        'See all',
-                        style: TextStyles.labelSmall(context)
-                            .copyWith(color: MainColors.primaryColor),
-                      ),
-                    ),
                   ],
                 ),
               ),

@@ -1,8 +1,10 @@
+import 'package:cars/app/core/constants/images_assets_constants.dart';
 import 'package:cars/app/core/styles/colors.dart';
 import 'package:cars/app/core/styles/text_styles.dart';
 import 'package:cars/app/models/frombackend/carmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class CarCard extends StatelessWidget {
   final Car car;
   final VoidCallback? ontap;
@@ -12,17 +14,17 @@ class CarCard extends StatelessWidget {
   String _getCarImagePath(CarType type) {
     switch (type) {
       case CarType.voiture:
-        return 'assets/images/cars/car.png';
+        return ImagesAssetsConstants.voiture;
       case CarType.motos_scooters:
-        return 'assets/images/cars/motorcycle.png';
+        return ImagesAssetsConstants.motos_scooters;
       case CarType.fourgon:
-        return 'assets/images/cars/van.png';
+        return ImagesAssetsConstants.fourgon;
       case CarType.camion:
-        return 'assets/images/cars/truck.png';
+        return ImagesAssetsConstants.camion;
       case CarType.bus:
-        return 'assets/images/cars/bus.png';
+        return ImagesAssetsConstants.bus;
       case CarType.tracteur:
-        return 'assets/images/cars/tractor.png';
+        return ImagesAssetsConstants.tracteur;
     }
   }
 
@@ -77,7 +79,7 @@ class CarCard extends StatelessWidget {
               height: 110.h,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage(_getCarImagePath(car.type)), 
+                    image: AssetImage(_getCarImagePath(car.type)),
                     fit: BoxFit.cover),
                 borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
                 color: MainColors.whiteColor,
@@ -94,7 +96,7 @@ class CarCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${car.mark} ${car.model}',
+                    '${car.mark} ${car.model} ',
                     style: TextStyles.bodyMedium(context).copyWith(
                       fontWeight: FontWeight.bold,
                       color: MainColors.primaryColor,
@@ -113,8 +115,8 @@ class CarCard extends StatelessWidget {
                       Icon(Icons.speed,
                           size: 14.sp, color: MainColors.categoryColor),
                       SizedBox(width: 4.w),
-                      Text(car.moteur.isEmpty ? 'N/A' : car.moteur, 
-                           style: TextStyles.bodySmall(context)),
+                      Text(car.moteur.isEmpty ? 'N/A' : car.moteur,
+                          style: TextStyles.bodySmall(context)),
                     ],
                   ),
                   SizedBox(height: 6.h),

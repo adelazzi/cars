@@ -97,4 +97,18 @@ class HomeController extends GetxController {
       weekend: '20% OFF',
     ),
   ];
+
+
+
+/////////////////////////////////// Brands part 
+
+final List<User_brands> topBrands =[];
+
+Future<void> fetchTopBrands() async {
+  topBrands.clear();
+  final brands = await User_brands.fetchTopBrands();
+  topBrands.addAll(brands);
+  update(); // Notify listeners about the change
+}
+
 }

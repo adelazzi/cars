@@ -1,5 +1,5 @@
-import 'package:cars/app/models/brandmodel.dart';
-import 'package:cars/app/models/CarsBrandmodel.dart';
+import 'dart:developer';
+
 import 'package:cars/app/models/frombackend/subcategory.dart';
 import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:get/get.dart';
@@ -10,6 +10,21 @@ class ExploreController extends GetxController {
   var currentBannerIndex = 0.obs;
   var selectedCategory = 'All'.obs;
   var searchQuery = ''.obs;
+
+@override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+
+
+  User_brands.fetchTopBrands().then((brands) {
+    topBrands.assignAll(brands);
+  }).catchError((error) {
+    log('Error fetching top brands: $error');
+  });
+  }
+
+
 
   final List<CategoryEnum> categories = CategoryEnum.values;
 
@@ -100,14 +115,10 @@ class ExploreController extends GetxController {
     ),
   ];
 
-  final List<Brand> topBrands = carBrandsList
-      .map((car) => Brand(
-            name: car.name ?? '',
-            logo: car.image ?? '',
-            popularity: 0, // Default popularity, can be updated as needed
-          ))
-      .toList()
-      .sublist(1, 10);
+  final List<User_brands> topBrands =[];
+
+
+
   final List<Product> Productscat1 = [
     Product(
       storeId: 1,

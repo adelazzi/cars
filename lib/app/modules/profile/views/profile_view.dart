@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:cars/app/core/styles/colors.dart';
 import 'package:cars/app/core/styles/text_styles.dart';
 import 'package:cars/app/modules/profile/controllers/profile_controller.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProfileView extends GetView<ProfileController> {
   ProfileView({super.key});
@@ -42,26 +43,35 @@ class ProfileView extends GetView<ProfileController> {
           ),
         ),
         body: Obx(() => controller.isLoading.value
-            ? const Center(child: CircularProgressIndicator())
+            ? _buildLoadingShimmer(context)
             : SingleChildScrollView(
                 child: Column(
                   children: [
                     _buildProfileHeader(context),
-                    SizedBox(height: 20.h),
-                    // QuickActionSection(
-                    //   navigateToCars: () => controller.navigateToCars(),
-                    //   navigateToMaintenance: () =>
-                    //       controller.navigateToMaintenance(),
-                    //   navigateToFavorites: () =>
-                    //       controller.navigateToFavorites(),
-                    //   navigateToHistory: () => controller.navigateToHistory(),
-                    // ),
-                    // SizedBox(height: 20.h),
+                    Wrap(
+                      children: usercontroller.currentUser.value.brands != null
+                          ? usercontroller.currentUser.value.brands!
+                              .map((brand) => Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 4.w, vertical: 4.h),
+                                    child: Chip(
+                                      label: Text(brand.name),
+                                      avatar: brand.image.isNotEmpty
+                                          ? CircleAvatar(
+                                              backgroundImage:
+                                                  NetworkImage(brand.image),
+                                            )
+                                          : null,
+                                    ),
+                                  ))
+                              .toList()
+                          : [],
+                    ),
                     MyCarsSection(
                       cars: controller.cars,
-                      onSeeAll: () => controller.navigateToCars(),
                       onAddCar: () => controller.navigateToAddCar(),
-                      onCarTap: (index) => controller.navigateToEditCar(index),
+                      onCarTap: (index) =>
+                          controller.navigateToDetailsCar(index),
                     ),
                     SizedBox(height: 20.h),
                     AccountOptionSection(
@@ -74,6 +84,125 @@ class ProfileView extends GetView<ProfileController> {
                   ],
                 ),
               )),
+      ),
+    );
+  }
+
+  Widget _buildLoadingShimmer(BuildContext context) {
+    final base = (MainColors.shadowColor(context) ??
+            Theme.of(context).colorScheme.surface)
+        .withOpacity(0.8);
+    final highlight = (MainColors.inputColor(context) ??
+            Theme.of(context).colorScheme.onSurface)
+        .withOpacity(0.06);
+    final placeholder = MainColors.inputColor(context) ?? Colors.grey[300];
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        child: Shimmer.fromColors(
+          baseColor: base,
+          highlightColor: highlight,
+          child: Column(
+            children: [
+              // header shimmer
+              Container(
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  color: MainColors.backgroundColor(context) ??
+                      Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 220.h,
+                      width: 100.w,
+                      decoration: BoxDecoration(
+                        color: placeholder,
+                        borderRadius: BorderRadius.circular(15.r),
+                      ),
+                    ),
+                    SizedBox(width: 20.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                              height: 20.h, width: 140.w, color: placeholder),
+                          SizedBox(height: 8.h),
+                          Container(
+                              height: 20.h, width: 100.w, color: placeholder),
+                          SizedBox(height: 8.h),
+                          Container(
+                              height: 20.h, width: 180.w, color: placeholder),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16.h),
+              // chips shimmer
+              SizedBox(
+                height: 40.h,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 4,
+                  separatorBuilder: (_, __) => SizedBox(width: 8.w),
+                  itemBuilder: (_, __) => Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w),
+                    decoration: BoxDecoration(
+                      color: placeholder,
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    width: 80.w,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              // car items shimmer
+              Column(
+                children: List.generate(4, (index) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(vertical: 8.h),
+                    padding: EdgeInsets.all(12.w),
+                    decoration: BoxDecoration(
+                      color: MainColors.backgroundColor(context) ??
+                          Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 60.h,
+                          width: 90.w,
+                          color: placeholder,
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                  height: 14.h,
+                                  width: double.infinity,
+                                  color: placeholder),
+                              SizedBox(height: 8.h),
+                              Container(
+                                  height: 12.h,
+                                  width: 120.w,
+                                  color: placeholder),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -133,7 +262,8 @@ class ProfileView extends GetView<ProfileController> {
                           return Container(
                             padding: EdgeInsets.all(20.r),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface,
+                              color: MainColors.backgroundColor(context) ??
+                                  Theme.of(context).colorScheme.surface,
                               borderRadius: BorderRadius.vertical(
                                 top: Radius.circular(20.r),
                               ),

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cars/app/core/constants/storage_keys_constants.dart';
 import 'package:cars/app/core/services/local_storage_service.dart';
+import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:cars/app/modules/user_controller.dart';
 import 'package:cars/app/routes/app_pages.dart';
 import 'package:get/get.dart';
@@ -29,7 +30,9 @@ class SplashController extends GetxController {
         type: DataTypes.int,
       );
 
-      if (token != null && userId != null && userId > 0) {
+      bool checktoken = await UserModel.ckeckToken();
+
+      if (token != null && userId != null && userId > 0 && checktoken == true) {
         final userController = Get.find<UserController>();
         userController.Token = token;
         userController.currentUser.value.id = userId;
@@ -46,7 +49,4 @@ class SplashController extends GetxController {
       Get.offNamed(Routes.LOGIN);
     }
   }
-
-
-
 }

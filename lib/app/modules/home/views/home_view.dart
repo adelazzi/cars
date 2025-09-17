@@ -2,7 +2,6 @@ import 'package:cars/app/core/components/cards/carsbrandcomponent.dart';
 import 'package:cars/app/core/components/cards/wilayacard.dart';
 import 'package:cars/app/core/components/others/titelsection.dart';
 import 'package:cars/app/core/constants/wilayas.dart';
-import 'package:cars/app/models/CarsBrandmodel.dart';
 import 'package:cars/app/modules/home/views/sections/storessection.dart';
 import 'package:cars/app/modules/home/views/sections/actionsection.dart';
 import 'package:cars/app/modules/home/views/sections/bannersection.dart';
@@ -181,9 +180,9 @@ class HomeView extends GetView<HomeController> {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: carBrandsList.length,
+            itemCount:controller.topBrands .length,
             itemBuilder: (context, index) {
-              final car = carBrandsList[index];
+              final car = controller.topBrands[index];
               return Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: CarsBrandComponent(

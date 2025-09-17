@@ -10,6 +10,7 @@ import 'package:cars/app/core/styles/colors.dart';
 import 'package:cars/app/modules/login/controllers/login_controller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cars/app/core/styles/text_styles.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class LoginView extends GetView<LoginController> {
   LoginView({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class LoginView extends GetView<LoginController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        height: double.infinity,
+        height: Get.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -94,6 +95,38 @@ class LoginView extends GetView<LoginController> {
                   padding: EdgeInsets.symmetric(horizontal: 24.w),
                   child: Column(
                     children: [
+                      SizedBox(height: 20.h),
+                      Obx(
+                        () => controller.isconnected.value
+                            ? const SizedBox.shrink()
+                            : SizedBox(
+                                height: 40.h,
+                                child: InkWell(
+                                  onTap: () async {
+                                    await controller.checkInternet();
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Network error",
+                                        style: TextStyles.titleSmall(context)
+                                            .copyWith(
+                                          color:
+                                              MainColors.disableColor(context),
+                                        ),
+                                      ),
+                                      SizedBox(width: 8.w),
+                                      Icon(Icons.wifi_off,
+                                          color:
+                                              MainColors.disableColor(context),
+                                          size: 20.sp)
+                                    ],
+                                  ),
+                                ),
+                              ),
+                      ),
                       SizedBox(height: 60.h),
 
                       // Header section

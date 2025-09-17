@@ -1,3 +1,4 @@
+import 'package:cars/app/modules/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -153,6 +154,8 @@ class AddcarView extends GetView<AddcarController> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         final newCar = Car(
+                          clientid:
+                              Get.find<UserController>().currentUser.value.id!,
                           mark: _markController.text,
                           model: _modelController.text,
                           year: int.parse(_yearController.text),

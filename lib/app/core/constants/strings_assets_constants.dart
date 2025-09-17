@@ -37,4 +37,5 @@ class StringsAssetsConstants {
   static String get address => "address".tr;
   static String get enterYourAddress => "enter_your_address".tr;
   static String get alreadyHaveAnAccount => "already_have_an_account".tr;
+  static String get carDetails => "car_details".tr;
 }
