@@ -113,7 +113,7 @@ class Car {
 
   static Future<bool> delete(String id) async {
     await HttpClientService.sendRequest(
-        endPoint: '/cars/$id',
+        endPoint: '${EndPointsConstants.carApi}/$id/',
         requestType: HttpRequestTypes.delete,
         onSuccess: (response) {
           log('Car deleted successfully');
@@ -153,7 +153,7 @@ class Car {
         });
 
     if (response != null && response.body is List) {
-      log('CARS response.body: ${response.body}');
+      // log('CARS response.body ');
       return (response.body as List).map((json) {
         return Car(
           id: int.tryParse(json['id']?.toString() ?? '0') ?? 0,

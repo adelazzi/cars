@@ -314,22 +314,6 @@ def process_translations(phrases_list):
 if __name__ == "__main__":
     # Example phrases to translate
     translations_to_add = [
-'Model',
-'Brand',
-'Year',
-'Engine',
-'Transmission',
-'Fuel Type',
-'Car Type',
-'Close',
-'Confirm Delete',
-'Are you sure you want to delete this car?',
-'Cancel',
-'Delete',
-'Car deleted successfully',
-'Failed to delete car',
-'An error occurred while fetching cars',
-#
 
 
 
