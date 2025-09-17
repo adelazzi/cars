@@ -38,4 +38,19 @@ class StringsAssetsConstants {
   static String get enterYourAddress => "enter_your_address".tr;
   static String get alreadyHaveAnAccount => "already_have_an_account".tr;
   static String get carDetails => "car_details".tr;
+  static String get model => "model".tr;
+  static String get brand => "brand".tr;
+  static String get year => "year".tr;
+  static String get engine => "engine".tr;
+  static String get transmission => "transmission".tr;
+  static String get fuel_type => "fuel_type".tr;
+  static String get car_type => "car_type".tr;
+  static String get close => "close".tr;
+  static String get confirm_delete => "confirm_delete".tr;
+  static String get are_you_sure_you_want_to_delete_this_car => "are_you_sure_you_want_to_delete_this_car".tr;
+  static String get cancel => "cancel".tr;
+  static String get delete => "delete".tr;
+  static String get car_deleted_successfully => "car_deleted_successfully".tr;
+  static String get failed_to_delete_car => "failed_to_delete_car".tr;
+  static String get an_error_occurred_while_fetching_cars => "an_error_occurred_while_fetching_cars".tr;
 }
