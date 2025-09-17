@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cars/app/core/components/inputs/imagepicker.dart';
+import 'package:cars/app/core/constants/strings_assets_constants.dart';
 import 'package:cars/app/modules/profile/views/sections/accountoptionsection.dart';
 import 'package:cars/app/modules/profile/views/sections/mycarssection.dart';
 import 'package:cars/app/modules/profile/views/sections/quickqctionsection.dart';
@@ -272,7 +273,7 @@ class ProfileView extends GetView<ProfileController> {
                               onImageSelected: (File image) {
                                 // Show a confirmation dialog before updating profile picture
                                 Get.defaultDialog(
-                                  title: 'Confirm Update',
+                                  title: StringsAssetsConstants.confirm_update,
                                   content: Column(
                                     children: [
                                       Container(
@@ -288,12 +289,12 @@ class ProfileView extends GetView<ProfileController> {
                                         ),
                                       ),
                                       SizedBox(height: 16.h),
-                                      Text(
-                                          'Are you sure you want to update your profile picture?'),
+                                      Text(StringsAssetsConstants
+                                          .are_you_sure_you_want_to_update_your_profile_picture),
                                     ],
                                   ),
-                                  textConfirm: 'Update',
-                                  textCancel: 'Cancel',
+                                  textConfirm: StringsAssetsConstants.update,
+                                  textCancel: StringsAssetsConstants.cancel,
                                   confirmTextColor: Colors.white,
                                   onConfirm: () {
                                     Get.back(); // Close dialog
@@ -324,15 +325,18 @@ class ProfileView extends GetView<ProfileController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  ('${usercontroller.currentUser.value.firstName!} ${usercontroller.currentUser.value.lastName!}') ??
-                      'User',
+                  ('${usercontroller.currentUser.value.firstName!} ${usercontroller.currentUser.value.lastName!}'),
                   style: TextStyles.titleMedium(context),
                 ),
                 SizedBox(height: 5.h),
                 Text(
                   usercontroller.currentUser.value.phoneNumber ??
-                      'Add phone number',
-                  style: TextStyles.bodySmall(context),
+                      StringsAssetsConstants.add_phone_number,
+                  style: TextStyles.bodySmall(context).copyWith(
+                    color: usercontroller.currentUser.value.phoneNumber == null
+                        ? MainColors.errorColor(context)
+                        : null,
+                  ),
                 ),
                 SizedBox(height: 5.h),
                 Row(
@@ -387,6 +391,6 @@ class ProfileView extends GetView<ProfileController> {
       }
       return location;
     }
-    return 'Add address';
+    return StringsAssetsConstants.add_address;
   }
 }

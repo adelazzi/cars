@@ -314,8 +314,8 @@ def process_translations(phrases_list):
 if __name__ == "__main__":
     # Example phrases to translate
     translations_to_add = [
-
-
+ 'Car added successfully',
+'Failed to add car ', 
 
     ]
     

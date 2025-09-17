@@ -632,13 +632,13 @@ class UserModel {
     return false;
   }
 
-  static Future<bool> ckeckToken() async {
+  static Future<bool> ckeckToken(String token) async {
     try {
       final response = await HttpClientService.sendRequest(
         endPoint: EndPointsConstants.checkToken,
         requestType: HttpRequestTypes.get,
         header: {
-          'authorization': 'Bearer ${Get.find<UserController>().Token}',
+          'authorization': 'Bearer '+token,
         },
         onSuccess: (apiResponse) async {
           log('Logout successful: ${apiResponse.body}');

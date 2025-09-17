@@ -53,4 +53,12 @@ class StringsAssetsConstants {
   static String get car_deleted_successfully => "car_deleted_successfully".tr;
   static String get failed_to_delete_car => "failed_to_delete_car".tr;
   static String get an_error_occurred_while_fetching_cars => "an_error_occurred_while_fetching_cars".tr;
+  static String get confirm_update => "confirm_update".tr;
+  static String get are_you_sure_you_want_to_update_your_profile_picture => "are_you_sure_you_want_to_update_your_profile_picture".tr;
+  static String get update => "update".tr;
+  static String get add_phone_number => "add_phone_number".tr;
+  static String get add_address => "add_address".tr;
+  static String get my_cars => "my_cars".tr;
+  static String get car_added_successfully => "car_added_successfully".tr;
+  static String get failed_to_add_car => "failed_to_add_car".tr;
 }

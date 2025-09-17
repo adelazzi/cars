@@ -39,7 +39,7 @@ class Car {
       energie: FuelType.values
           .firstWhere((e) => e.toString() == 'FuelType.${json['energie']}'),
       boiteVitesse: Transmission.values.firstWhere(
-          (e) => e.toString() == 'Transmission.${json['boiteVitesse']}'),
+          (e) => e.toString() == 'Transmission.${json['boitevitesse']}'),
       moteur: json['moteur'] ?? '',
       clientid: int.tryParse(json['clientid']?.toString() ?? '0') ?? 0,
     );
@@ -52,7 +52,7 @@ class Car {
       'year': year,
       'type': type.name,
       'energie': energie.name,
-      'boiteVitesse': boiteVitesse.name,
+      'boitevitesse': boiteVitesse.name,
       'moteur': moteur,
       'clientid': clientid,
     };
@@ -80,13 +80,24 @@ class Car {
         data: car.toJson(),
         onSuccess: (response) {
           log('done');
-          Get.find<ProfileController>()
-              .cars
-              .value
-              .add(Car.fromJson(response.body));
+          try {
+            log('done');
+            if (response.body is Map<String, dynamic>) {
+              final body = Map<String, dynamic>.from(response.body);
+
+              final createdCar = Car.fromJson(body);
+              final profileCtrl = Get.find<ProfileController>();
+              profileCtrl.cars.value.add(createdCar);
+              profileCtrl.cars.refresh();
+            } else {
+              log('Unexpected response.body format: ${response.body.runtimeType}');
+            }
+          } catch (e, st) {
+            log('Error handling create response: $e\n$st');
+          }
         },
         onError: (errors, response) {
-          log('onError === ' + response.body.toString());
+          log('onError === ' + response.statusCode.toString());
           log(errors.join(', '));
         });
 

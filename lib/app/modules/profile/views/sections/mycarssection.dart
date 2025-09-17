@@ -1,3 +1,4 @@
+import 'package:cars/app/core/constants/strings_assets_constants.dart';
 import 'package:cars/app/core/styles/colors.dart';
 import 'package:cars/app/core/styles/text_styles.dart';
 import 'package:cars/app/models/frombackend/carmodel.dart';
@@ -32,11 +33,12 @@ class MyCarsSection extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.all(16.r),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('My Cars', style: TextStyles.titleSmall(context)),
+                    Text(StringsAssetsConstants.my_cars,
+                        style: TextStyles.titleSmall(context)),
                   ],
                 ),
               ),

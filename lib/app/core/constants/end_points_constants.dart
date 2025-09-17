@@ -25,8 +25,8 @@ class EndPointsConstants {
   static String brandsOfUsers(String userId) => "$userApi/$userId/brands/";
 
   // Car Endpoints
-  static const String carApi = "$baseUrl/car/api";
-  static String myCars(String userId) => "$carApi/my-cars/$userId/";
+  static const String carApi = "$baseUrl/car/api/";
+  static String myCars(String userId) => "$carApi" + "my-cars/$userId/";
 
   // Review Endpoints
   static const String reviewApi = "$baseUrl/review/api/";

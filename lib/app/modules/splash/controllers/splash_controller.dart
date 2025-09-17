@@ -30,7 +30,7 @@ class SplashController extends GetxController {
         type: DataTypes.int,
       );
 
-      bool checktoken = await UserModel.ckeckToken();
+      bool checktoken = await UserModel.ckeckToken(token);
 
       if (token != null && userId != null && userId > 0 && checktoken == true) {
         final userController = Get.find<UserController>();
