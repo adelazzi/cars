@@ -124,7 +124,7 @@ class Car {
 
   static Future<bool> delete(String id) async {
     await HttpClientService.sendRequest(
-        endPoint: '${EndPointsConstants.carApi}/$id/',
+        endPoint: '${EndPointsConstants.carApi}$id/',
         requestType: HttpRequestTypes.delete,
         onSuccess: (response) {
           log('Car deleted successfully');

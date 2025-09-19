@@ -14,9 +14,6 @@ class OrdersView extends GetView<OrdersController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          centerTitle: true,
           title: Text(
             ' My orders ',
             style: TextStyles.titleMedium(context)

@@ -68,11 +68,10 @@ class ToastComponent {
             color: Colors.white,
             size: 20.r,
           ),
-          const SizedBox(
-            width: 10,
+          SizedBox(
+            width: 10.w,
           ),
           SizedBox(
-            width: Get.width - 115,
             child: Text(
               message,
               style: TextStyles.bodyMedium(context).copyWith(

@@ -638,7 +638,7 @@ class UserModel {
         endPoint: EndPointsConstants.checkToken,
         requestType: HttpRequestTypes.get,
         header: {
-          'authorization': 'Bearer '+token,
+          'authorization': 'Bearer ' + token,
         },
         onSuccess: (apiResponse) async {
           log('Logout successful: ${apiResponse.body}');

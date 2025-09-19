@@ -33,6 +33,8 @@ class EndPointsConstants {
 
   // Order Endpoints
   static const String orderApi = "$baseUrl/order/api/";
+  static const String clientorders = '$baseUrl/order/api/client-orders';
+  static const String storeorders = '$baseUrl/order/api/store-orders';
 
   // Notification Endpoints
   static const String notificationApi = "$baseUrl/notification/api/";

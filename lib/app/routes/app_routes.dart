@@ -24,6 +24,7 @@ abstract class Routes {
   static const SPLASH = _Paths.SPLASH;
   static const EXPLORE = _Paths.EXPLORE;
     static const ADDCAR = _Paths.ADDCAR;
+    static const ORDERDETAILS = _Paths.ORDERDETAILS;
 }
 
 abstract class _Paths {
@@ -44,4 +45,5 @@ abstract class _Paths {
   static const SPLASH = '/splash';
   static const EXPLORE = '/explore';
     static const ADDCAR = '/addcar';
+    static const ORDERDETAILS = '/orderdetails';
 }
