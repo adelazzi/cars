@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:cars/app/models/frombackend/adsmodel.dart';
 import 'package:cars/app/models/frombackend/ordermodel.dart';
 import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +15,24 @@ class HomeController extends GetxController {
   final PageController pageController = PageController();
   final RxInt currentPage = 0.obs;
   Timer? timer;
+  RxList<AdsModel> ads = <AdsModel>[].obs;
+
+  RxBool isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     _startAutoPlay();
+    fetchmydata();
+  }
+
+  void fetchmydata() async {
+    isLoading.value = true;
+    update();
+    await fetchAds();
+    await fetchTopBrands();
+    await fetchStores();
+    isLoading.value = false;
   }
 
   @override
@@ -29,18 +44,20 @@ class HomeController extends GetxController {
 
   void _startAutoPlay() {
     timer = Timer.periodic(const Duration(seconds: 4), (timer) {
-      if (currentPage.value < 2) {
-        currentPage.value++;
-      } else {
-        currentPage.value = 0;
-      }
+      if (ads.isNotEmpty) {
+        if (currentPage.value < ads.length - 1) {
+          currentPage.value++;
+        } else {
+          currentPage.value = 0;
+        }
 
-      if (pageController.hasClients) {
-        pageController.animateToPage(
-          currentPage.value,
-          duration: const Duration(milliseconds: 350),
-          curve: Curves.easeInOut,
-        );
+        if (pageController.hasClients) {
+          pageController.animateToPage(
+            currentPage.value,
+            duration: const Duration(milliseconds: 350),
+            curve: Curves.easeInOut,
+          );
+        }
       }
     });
   }
@@ -67,48 +84,46 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> fetchAds() async {
+    try {
+      ads.clear(); // Clear the list before fetching new data
+      final pagination = await AdsModel.fetchAll();
+      final fetchedAds = pagination.results ?? [];
+      ads.assignAll(fetchedAds);
+      log('lenth ads: ${fetchedAds.length}');
+    } catch (e) {
+      print('Error fetching ads: $e');
+    }
+  }
+
   //////////////////////////// Store section
-  final List<UserModel> topStores = [
-    UserModel(
-      name: 'AutoParts Pro',
-      userType: UserType.store,
-      profileImage:
-          'https://img.freepik.com/vecteurs-libre/modele-logo-service-voiture-degrade_23-2149727258.jpg?w=360',
-      disponible: true,
-      address: '15420 products available',
-      weekend: '15% OFF',
-    ),
-    UserModel(
-      name: 'Speed Motors',
-      userType: UserType.store,
-      profileImage:
-          'https://img.freepik.com/vecteurs-libre/creation-logo-degrade-pieces-automobiles_23-2149460685.jpg',
-      disponible: true,
-      address: '8350 products available',
-      weekend: 'Free Shipping',
-    ),
-    UserModel(
-      name: 'Car Zone Plus',
-      userType: UserType.store,
-      profileImage:
-          'https://img.freepik.com/vecteurs-libre/modele-logo-service-voiture-degrade_23-2149727273.jpg?w=360',
-      disponible: false,
-      address: '12180 products available',
-      weekend: '20% OFF',
-    ),
-  ];
+  List<UserModel> topStores = <UserModel>[].obs;
+  RxList<UserModel> allStores = <UserModel>[].obs;
+  RxBool isLoadingStores = false.obs;
 
+  Future<void> fetchStores() async {
+    try {
+      isLoadingStores.value = true;
+      final pagination = await UserModel.fetchAllStores();
+      final stores = pagination.results ?? [];
+      topStores.clear();
+      topStores.assignAll(stores);
+      log('Fetched ${stores.length} stores successfully');
+    } catch (e) {
+      log('Error fetching stores: $e');
+    } finally {
+      isLoadingStores.value = false;
+    }
+  }
 
+/////////////////////////////////// Brands part
 
-/////////////////////////////////// Brands part 
+  final List<User_brands> topBrands = [];
 
-final List<User_brands> topBrands =[];
-
-Future<void> fetchTopBrands() async {
-  topBrands.clear();
-  final brands = await User_brands.fetchTopBrands();
-  topBrands.addAll(brands);
-  update(); // Notify listeners about the change
-}
-
+  Future<void> fetchTopBrands() async {
+    topBrands.clear();
+    final brands = await User_brands.fetchTopBrands();
+    topBrands.addAll(brands);
+    update(); // Notify listeners about the change
+  }
 }

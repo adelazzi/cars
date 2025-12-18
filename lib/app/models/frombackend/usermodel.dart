@@ -8,6 +8,7 @@ import 'package:cars/app/core/constants/storage_keys_constants.dart';
 import 'package:cars/app/core/services/http_client_service.dart';
 import 'package:cars/app/core/services/local_storage_service.dart';
 import 'package:cars/app/models/api_response.dart';
+import 'package:cars/app/models/pagination_model.dart';
 import 'package:cars/app/modules/register/controllers/register_controller.dart';
 import 'package:cars/app/modules/user_controller.dart';
 import 'package:dio/dio.dart' as dio;
@@ -17,7 +18,7 @@ class User_brands {
   int id;
   String name;
   String image;
-  User_brands(this.id, this.name, {this.image = ''});
+  User_brands(this.id, this.name, this.image);
 
   static Future<List<User_brands>> fetchAllBrands() async {
     try {
@@ -38,6 +39,7 @@ class User_brands {
             .map((brand) => User_brands(
                   brand['id'] as int,
                   brand['name'] as String,
+                  brand['image'] as String? ?? '',
                 ))
             .toList();
       }
@@ -53,7 +55,7 @@ class User_brands {
         endPoint: EndPointsConstants.topBrands,
         requestType: HttpRequestTypes.get,
         onSuccess: (apiResponse) {
-          log('Fetched top brands successfully: ${apiResponse.body}');
+          log('Fetched top brands successfully ');
         },
         onError: (errors, apiResponse) {
           log('Failed to fetch top brands: ${errors.join(', ')}');
@@ -66,6 +68,7 @@ class User_brands {
             .map((brand) => User_brands(
                   brand['id'] as int,
                   brand['name'] as String,
+                  brand['image'] as String,
                 ))
             .toList();
       }
@@ -194,6 +197,7 @@ class UserModel {
           ?.map((brand) => User_brands(
                 brand['id'] as int,
                 brand['name'] as String,
+                brand['image'] as String,
               ))
           .toList(),
     );
@@ -282,13 +286,10 @@ class UserModel {
         },
         onError: (errors, apiResponse) {
           if (apiResponse.body != null && apiResponse.body['error'] != null) {
-            final errorDetails =
-                apiResponse.body['error'] as Map<String, dynamic>;
-            errorDetails.forEach((key, value) {
-              log('Login error - $key: ${value.join(', ')}');
-            });
-          } else {
-            log('Login failed: ${errors.join(', ')}');
+            final errorDetails = apiResponse.body['error'];
+            log('Login error details: $errorDetails');
+
+            return null;
           }
         },
       );
@@ -421,13 +422,13 @@ class UserModel {
     return false;
   }
 
-  static Future<List<UserModel>> fetchAllStores() async {
+  static Future<PaginationModel<UserModel>> fetchAllStores() async {
     try {
       final response = await HttpClientService.sendRequest(
-        endPoint: '/stores',
+        endPoint: EndPointsConstants.allStores,
         requestType: HttpRequestTypes.get,
         onSuccess: (apiResponse) {
-          log('Fetched all stores successfully: ${apiResponse.body}');
+          log('Fetched all stores successfully');
         },
         onError: (errors, apiResponse) {
           log('Failed to fetch stores: ${errors.join(', ')}');
@@ -435,13 +436,15 @@ class UserModel {
       );
 
       if (response != null && response.body != null) {
-        final List<dynamic> stores = response.body as List<dynamic>;
-        return stores.map((store) => UserModel.fromJson(store)).toList();
+        return PaginationModel<UserModel>.fromJson(
+          response.body as Map<String, dynamic>, 
+          (json) => UserModel.fromJson(json)
+        );
       }
     } catch (e) {
       log('Error during fetching stores: $e');
     }
-    return [];
+    return PaginationModel<UserModel>(results: []);
   }
 
   static Future<List<UserModel>> fetchAllClients() async {

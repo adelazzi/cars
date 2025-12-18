@@ -4,6 +4,7 @@ import 'package:cars/app/core/constants/end_points_constants.dart';
 import 'package:cars/app/core/services/http_client_service.dart';
 import 'package:cars/app/models/frombackend/usermodel.dart';
 import 'package:cars/app/models/pagination_model.dart';
+import 'package:cars/app/modules/orders/controllers/orders_controller.dart';
 import 'package:cars/app/modules/user_controller.dart';
 import 'package:get/get.dart';
 
@@ -14,30 +15,50 @@ class OrderModel {
   final String? storeName;
   final String? firstName;
   final String? lastName;
+  final String? phoneNumber;
   final int? productId;
   final String? productName;
+  final String? productImageUrl;
   final String? description;
   final String totalPrice;
   final String? notes;
   final OrderStatus status;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final int? carId;
+  final String? carModel;
+  final int? carYear;
+  final String? carMark;
+  final String? carEnergie;
+  final String? carBoiteVitesse;
+  final String? carMoteur;
+  final int? quantity;
 
   OrderModel({
+    this.quantity,
     required this.id,
     required this.clientId,
     this.storeId,
     this.storeName,
     this.firstName,
     this.lastName,
+    this.phoneNumber,
     this.productId,
     this.productName,
+    this.productImageUrl,
     this.description,
     required this.totalPrice,
     this.notes,
     required this.status,
     required this.createdAt,
     required this.updatedAt,
+    this.carId,
+    this.carModel,
+    this.carYear,
+    this.carMark,
+    this.carEnergie,
+    this.carBoiteVitesse,
+    this.carMoteur,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -45,32 +66,56 @@ class OrderModel {
       id: json['id'],
       clientId: json['client_id'],
       storeId: json['store_id'],
-      storeName: json['store_name'] ?? '',
-      firstName: json['first_name'] ?? '',
-      lastName: json['last_name'] ?? '',
       productId: json['product_id'],
-      productName: json['product_name'],
-      description: json['description'],
       totalPrice: json['total_price'],
       notes: json['notes'],
       status: OrderStatus.fromString(json['status']),
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
+      carId: json['car_id'],
+
+      // Handle car information if present
+      carModel: json['car_model'],
+      carYear: json['car_year'],
+      carMark: json['car_mark'],
+      carEnergie: json['car_energie'],
+      carBoiteVitesse: json['car_boitevitesse'],
+      carMoteur: json['car_moteur'],
+
+      // Handle product information if present
+      productName: json['product_name'],
+      productImageUrl: json['product_image_url'],
+      description: json['descreption'],
+      quantity: json['quantity'],
+
+      // Handle store or user information if present
+      storeName: json['store_name'],
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      phoneNumber: json['phone_number'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      // ids
       'client_id': clientId,
       'store_id': storeId,
       'product_id': productId,
+      'car_id': carId,
+
+      // product information
       'product_name': productName,
-      'description': description,
+      'product_image_url': productImageUrl,
+      'quantity': quantity,
+      'descreption': description,
+
+      // pricing and notes
       'total_price': totalPrice,
       'notes': notes,
-      'status': status.displayName(),
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
+
+      // status
+      'status': status.name,
     };
   }
 
@@ -85,7 +130,7 @@ class OrderModel {
       endpoint = EndPointsConstants.storeorders; // No trailing slash
     }
     log('Fetching orders from endpoint: $endpoint');
-    log(Get.find<UserController>().Token);
+    log('Token :' + Get.find<UserController>().Token);
     final response = await HttpClientService.sendRequest(
       header: {
         'Authorization': 'Bearer ${Get.find<UserController>().Token}',
@@ -127,15 +172,33 @@ class OrderModel {
   }
 
   static Future<void> updateOrder(int id, OrderModel order) async {
+    log(' this is the endpoint :' + EndPointsConstants.orderApi + '$id' + '/');
+    log('this is the Order :' + order.toJson().toString());
+
     await HttpClientService.sendRequest(
       header: {
         'Authorization': 'Bearer ${Get.find<UserController>().Token}',
       },
       endPoint: EndPointsConstants.orderApi + '$id' + '/',
-      requestType: HttpRequestTypes.patch,
+      requestType: HttpRequestTypes.put,
       data: order.toJson(),
-      onError: (errors, _) {
-        throw Exception('Failed to update order: ${errors.join(', ')}');
+      onSuccess: (response) {
+        Get.find<OrdersController>()
+            .orders
+            .where(
+              (o) => o.id == id,
+            )
+            .forEach((o) {
+          int index = Get.find<OrdersController>().orders.indexOf(o);
+          if (index != -1) {
+            Get.find<OrdersController>().orders[index] = order;
+          }
+        });
+        Get.find<OrdersController>().update();
+      },
+      onError: (errors, responce) {
+        log('this is the eroor' + responce.body.toString());
+        log('Failed to update order: ${errors.join(', ')}');
       },
     );
   }

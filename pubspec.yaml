@@ -30,6 +30,9 @@ dependencies:
   lottie: ^3.2.0
   smooth_page_indicator: ^1.2.1
   font_awesome_flutter: 10.5.0
+  url_launcher: ^6.3.1
+  location: ^7.0.1
+  flutter_rating_bar: ^4.0.1
     
 dev_dependencies:
   flutter_test:

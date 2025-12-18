@@ -36,12 +36,12 @@ class HomeView extends GetView<HomeController> {
                 color: MainColors.primaryColor),
             onPressed: () {},
           ),
-          
         ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          controller.refresh();
+          controller.fetchmydata();
+          controller.update();
         },
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -51,10 +51,12 @@ class HomeView extends GetView<HomeController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Banner Section
-                ModernBannerSection(),
-
-                SizedBox(height: 12.h),
-
+                Obx(() {
+                  return controller.ads.isEmpty
+                      ? const SizedBox.shrink()
+                      : const ModernBannerSection();
+                }),
+                SizedBox(height: 16.h),
                 // Quick Actions Section
                 QuickActionsSection(),
 
@@ -180,14 +182,14 @@ class HomeView extends GetView<HomeController> {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount:controller.topBrands .length,
+            itemCount: controller.topBrands.length,
             itemBuilder: (context, index) {
               final car = controller.topBrands[index];
               return Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: CarsBrandComponent(
                   brandName: car.name ?? '',
-                  logoUrl: car.image ?? '',
+                  logoUrl: car.image,
                   isPremium: [
                     'Ferrari',
                     'Lamborghini',

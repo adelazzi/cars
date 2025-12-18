@@ -2,6 +2,9 @@
 
 import 'package:get/get.dart';
 //here add  nesesary imports
+import 'package:cars/app/modules/fastrequest/bindings/fastrequest_binding.dart';
+import 'package:cars/app/modules/fastrequest/views/fastrequest_view.dart';
+
 import 'package:cars/app/modules/orderdetails/bindings/orderdetails_binding.dart';
 import 'package:cars/app/modules/orderdetails/views/orderdetails_view.dart';
 
@@ -47,6 +50,12 @@ class AppPages {
   static const INITIAL = Routes.SPLASH;
   static final routes = [
     // hereadd the new files like the others
+    GetPage(
+      name: _Paths.FASTREQUEST,
+      page: () => FastrequestView(),
+      binding: FastrequestBinding(),
+    ),
+
     GetPage(
       name: _Paths.ORDERDETAILS,
       page: () => OrderdetailsView(),

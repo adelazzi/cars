@@ -23,8 +23,7 @@ class OrderTile extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        Get.toNamed(Routes.ORDERDETAILS,
-            arguments: {'orderId': order.id});
+        Get.toNamed(Routes.ORDERDETAILS, arguments: {'orderId': order.id});
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -33,11 +32,14 @@ class OrderTile extends StatelessWidget {
           color: MainColors.backgroundColor(context),
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: order.status == OrderStatus.completed
+            color: order.status == OrderStatus.completed ||
+                    order.status == OrderStatus.confirmed
                 ? MainColors.successColor(context)!
                 : order.status == OrderStatus.cancelled
                     ? MainColors.errorColor(context)!
-                    : MainColors.warningColor(context)!,
+                    : order.status == OrderStatus.lookingForStore
+                        ? MainColors.infoColor(context)!
+                        : MainColors.warningColor(context)!,
             width: 1.w,
           ),
           boxShadow: [
@@ -56,7 +58,8 @@ class OrderTile extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(vertical: 8.r, horizontal: 15.r),
               child: SvgPicture.asset(
-                order.status == OrderStatus.completed
+                order.status == OrderStatus.completed ||
+                        order.status == OrderStatus.confirmed
                     ? IconsAssetsConstants.order_completed
                     : order.status == OrderStatus.cancelled
                         ? IconsAssetsConstants.order_refuse
@@ -90,11 +93,14 @@ class OrderTile extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 6.r, horizontal: 12.r),
                 decoration: BoxDecoration(
-                  color: order.status == OrderStatus.completed
+                  color: order.status == OrderStatus.completed ||
+                          order.status == OrderStatus.confirmed
                       ? MainColors.successColor(context)!
                       : order.status == OrderStatus.cancelled
                           ? MainColors.errorColor(context)!
-                          : MainColors.warningColor(context)!,
+                          : order.status == OrderStatus.lookingForStore
+                              ? MainColors.infoColor(context)!
+                              : MainColors.warningColor(context)!,
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(12.r),
                     topRight: Radius.circular(12.r),

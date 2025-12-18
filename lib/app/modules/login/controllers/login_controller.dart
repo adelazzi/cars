@@ -18,6 +18,7 @@ class LoginController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool rememberMe = true.obs;
   RxBool isconnected = false.obs;
+  RxBool tryconnected = false.obs;
 
   RxBool isPasswordHidden = true.obs;
   TextEditingController passwordController = TextEditingController();
@@ -57,18 +58,18 @@ class LoginController extends GetxController {
         fcmToken: fcmToken,
       );
 
-      await LocalStorageService.saveData(
-        key: StorageKeysConstants.userToken,
-        type: DataTypes.string,
-        value: Get.find<UserController>().Token,
-      );
-
-      if (user! != null) {
+      if (user != null) {
+        await LocalStorageService.saveData(
+          key: StorageKeysConstants.userToken,
+          type: DataTypes.string,
+          value: Get.find<UserController>().Token,
+        );
         await _handleSuccessfulLogin(user);
       } else {
         _showToast('Invalid email or password', ToastTypes.error);
       }
     } catch (e) {
+      isLoading.value = false;
       _showToast('An error occurred. Please try again.', ToastTypes.error);
     } finally {
       isLoading.value = false;
@@ -99,17 +100,27 @@ class LoginController extends GetxController {
   void toggleLanguage() {}
 
   Future<bool> checkInternet() async {
+    tryconnected.value = true;
     try {
-      isLoading.value = true;
       log("Checking internet connection...");
       final response = await HttpClientService.get(EndPointsConstants.user);
       log(response.body.toString());
       isLoading.value = false;
       isconnected.value = response.statusCode == 200;
+      tryconnected.value = false;
+      if (response.statusCode == 200) {
+        ToastComponent().showToast(
+          Get.context!,
+          message: 'Internet is back',
+          type: ToastTypes.success,
+        );
+      }
+
       return response.statusCode == 200;
     } catch (e) {
       isLoading.value = false;
       log("No internet connection: $e");
+      tryconnected.value = false;
       return false;
     }
   }

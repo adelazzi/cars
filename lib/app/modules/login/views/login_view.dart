@@ -109,12 +109,16 @@ class LoginView extends GetView<LoginController> {
                                     mainAxisSize: MainAxisSize.min,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        "Network error",
-                                        style: TextStyles.titleSmall(context)
-                                            .copyWith(
-                                          color:
-                                              MainColors.disableColor(context),
+                                      Obx(
+                                        () => Text(
+                                          controller.tryconnected.value == true
+                                              ? ' Try connecting '
+                                              : " Network error ",
+                                          style: TextStyles.titleSmall(context)
+                                              .copyWith(
+                                            color: MainColors.disableColor(
+                                                context),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(width: 8.w),

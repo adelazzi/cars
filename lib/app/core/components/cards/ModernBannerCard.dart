@@ -1,25 +1,20 @@
+import 'package:cars/app/core/constants/images_assets_constants.dart';
 import 'package:cars/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cars/app/core/styles/colors.dart';
+import 'package:cars/app/models/frombackend/adsmodel.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ModernBannerCard extends StatelessWidget {
-  final String imagePath;
-  final String title;
-  final String subtitle;
+  final AdsModel ad;
   final LinearGradient gradient;
-  final IconData icon;
-  final String bannerType;
   final HomeController controller;
 
   const ModernBannerCard({
     Key? key,
-    required this.imagePath,
-    required this.title,
-    required this.subtitle,
+    required this.ad,
     required this.gradient,
-    required this.icon,
-    required this.bannerType,
     required this.controller,
   }) : super(key: key);
 
@@ -27,38 +22,38 @@ class ModernBannerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        vertical: 15.h,
+        vertical: 20.h,
         horizontal: 8.w,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
             color: MainColors.shadowColor(context)!.withOpacity(0.1),
-            blurRadius: 1,
-            offset: const Offset(0, 4),
+            blurRadius: 1.r,
+            offset: Offset(0, 4.h),
           ),
         ],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: () => controller.onBannerTap(bannerType),
+          borderRadius: BorderRadius.circular(16.r),
+          onTap: () => controller.onBannerTap(ad.title),
           child: Stack(
             children: [
               // Background Image
               Positioned.fill(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.r),
                   child: Image.asset(
-                    imagePath,
+                    ImagesAssetsConstants.voiture,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         decoration: BoxDecoration(
                           gradient: gradient,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
                       );
                     },
@@ -69,12 +64,12 @@ class ModernBannerCard extends StatelessWidget {
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16.r),
                     gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
+                      begin: Alignment.bottomLeft,
+                      end: Alignment.topRight,
                       colors: [
-                        MainColors.blackColor.withOpacity(0.6),
+                        MainColors.primaryColor.withOpacity(0.6),
                         Colors.transparent,
                       ],
                     ),
@@ -85,49 +80,38 @@ class ModernBannerCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(20.r),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: MainColors.whiteColor.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        icon,
-                        color: MainColors.whiteColor,
-                        size: 24,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
                     Text(
-                      title,
+                      ad.title,
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                         color: MainColors.whiteColor,
                         shadows: [
                           Shadow(
                             color: MainColors.blackColor.withOpacity(0.54),
-                            offset: const Offset(1, 1),
-                            blurRadius: 3,
+                            offset: Offset(1.w, 1.h),
+                            blurRadius: 3.r,
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 4),
                     Text(
-                      subtitle,
+                      ad.description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: MainColors.whiteColor,
                         fontWeight: FontWeight.w500,
                         shadows: [
                           Shadow(
                             color: MainColors.blackColor.withOpacity(0.54),
-                            offset: const Offset(1, 1),
-                            blurRadius: 3,
+                            offset: Offset(1.w, 1.h),
+                            blurRadius: 3.r,
                           ),
                         ],
                       ),

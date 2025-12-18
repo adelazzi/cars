@@ -1,12 +1,14 @@
+import 'package:cars/app/models/frombackend/usermodel.dart';
+import 'package:cars/app/modules/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:cars/app/core/constants/strings_assets_constants.dart';
 import 'package:cars/app/core/styles/colors.dart';
 import 'package:cars/app/core/styles/text_styles.dart';
 import 'package:cars/app/models/frombackend/ordermodel.dart';
 import 'package:cars/app/modules/orderdetails/controllers/orderdetails_controller.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderdetailsView extends GetView<OrderdetailsController> {
   OrderdetailsView({Key? key}) : super(key: key);
@@ -51,6 +53,8 @@ class OrderdetailsView extends GetView<OrderdetailsController> {
         }
 
         final order = controller.order.value!;
+        UserType userrole =
+            Get.find<UserController>().currentUser.value.userType;
 
         return Stack(
           children: [
@@ -63,10 +67,16 @@ class OrderdetailsView extends GetView<OrderdetailsController> {
                   SizedBox(height: 16.h),
                   _buildOrderDetails(context, order),
                   SizedBox(height: 16.h),
-                  if (order.description != null)
-                    _buildDescriptionCard(context, order),
-                  SizedBox(height: 16.h),
-                  _buildTimelineCard(context, order),
+
+                  if (order.carId != null) ...[
+                    _buildCarDetails(context, order),
+                    SizedBox(height: 16.h),
+                  ],
+                  if (order.firstName != null && order.lastName != null) ...[
+                    _buildStoreDetails(context, order),
+                    SizedBox(height: 16.h),
+                  ],
+
                   SizedBox(height: 80.h), // Space for action buttons
                 ],
               ),
@@ -175,7 +185,6 @@ class OrderdetailsView extends GetView<OrderdetailsController> {
                 Text(
                   order.status.displayName(),
                   style: TextStyles.titleMedium(context).copyWith(
-                    color: statusColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -183,7 +192,7 @@ class OrderdetailsView extends GetView<OrderdetailsController> {
                 Text(
                   'DZD ${order.totalPrice}',
                   style: TextStyles.titleLarge(context).copyWith(
-                    color: MainColors.primaryColor,
+                    color: MainColors.backgroundColor(context),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -221,17 +230,14 @@ class OrderdetailsView extends GetView<OrderdetailsController> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const Divider(),
+          const Divider(
+            color: MainColors.primaryColor,
+          ),
           _buildDetailRow(context, 'Product', order.productName ?? 'N/A'),
-          // _buildDetailRow(
-          //     context, 'Store ID', order.storeId?.toString() ?? 'N/A'),
-          // _buildDetailRow(context, 'Client ID', order.clientId.toString()),
-          if (order.firstName != null && order.firstName!.isNotEmpty)
-            _buildDetailRow(context, 'First Name', order.firstName!),
-          if (order.lastName != null && order.lastName!.isNotEmpty)
-            _buildDetailRow(context, 'Last Name', order.lastName!),
-          if (order.storeName != null && order.storeName!.isNotEmpty)
-            _buildDetailRow(context, 'Store Name', order.storeName!),
+          if (order.quantity != null)
+            _buildDetailRow(context, 'Quentity', order.quantity.toString()),
+          if (order.description != null && order.description!.isNotEmpty)
+            _buildDetailRow(context, 'Desqreption', order.description!),
           if (order.notes != null && order.notes!.isNotEmpty)
             _buildDetailRow(context, 'Notes', order.notes!),
         ],
@@ -239,44 +245,7 @@ class OrderdetailsView extends GetView<OrderdetailsController> {
     );
   }
 
-  Widget _buildDescriptionCard(BuildContext context, OrderModel order) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.w),
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1.r,
-            blurRadius: 5.r,
-            offset: Offset(0, 3.h),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Description',
-            style: TextStyles.titleMedium(context).copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const Divider(),
-          Text(
-            order.description ?? 'No description available',
-            style: TextStyles.bodyMedium(context),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTimelineCard(BuildContext context, OrderModel order) {
-    final DateFormat formatter = DateFormat('MMM dd, yyyy HH:mm');
-
+  Widget _buildStoreDetails(BuildContext context, OrderModel order) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w),
       padding: EdgeInsets.all(16.r),
@@ -297,90 +266,105 @@ class OrderdetailsView extends GetView<OrderdetailsController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Timeline',
+            (order.storeName != null && order.storeName!.isNotEmpty)
+                ? 'Store Information'
+                : 'Client Information',
             style: TextStyles.titleMedium(context).copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          const Divider(),
-          _buildTimelineItem(
-            context,
-            'Created',
-            formatter.format(order.createdAt),
-            Icons.add_circle_outline,
-            MainColors.primaryColor,
-            isFirst: true,
-            isLast: false,
+          const Divider(
+            color: MainColors.primaryColor,
           ),
-          _buildTimelineItem(
-            context,
-            'Last Updated',
-            formatter.format(order.updatedAt),
-            Icons.update,
-            Colors.blue,
-            isFirst: false,
-            isLast: true,
-          ),
+          if (order.storeName != null && order.storeName!.isNotEmpty)
+            _buildDetailRow(context, 'Store name', order.storeName ?? 'N/A'),
+          if (order.firstName != null && order.firstName!.isNotEmpty)
+            _buildDetailRow(context, 'first name', order.firstName ?? 'N/A'),
+          if (order.lastName != null && order.lastName!.isNotEmpty)
+            _buildDetailRow(context, 'last name', order.lastName ?? 'N/A'),
+          if (order.phoneNumber != null && order.phoneNumber!.isNotEmpty)
+            if (order.phoneNumber != null && order.phoneNumber!.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.h),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Phone number',
+                        style: TextStyles.bodyMedium(context).copyWith(
+                          color: MainColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () async {
+                          final Uri phoneUri = Uri(
+                            scheme: 'tel',
+                            path: order.phoneNumber,
+                          );
+                          if (await canLaunchUrl(phoneUri)) {
+                            await launchUrl(phoneUri);
+                          }
+                        },
+                        child: Text(
+                          order.phoneNumber!,
+                          style: TextStyles.bodyMedium(context).copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
         ],
       ),
     );
   }
 
-  Widget _buildTimelineItem(
-    BuildContext context,
-    String title,
-    String subtitle,
-    IconData icon,
-    Color color, {
-    required bool isFirst,
-    required bool isLast,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          children: [
-            Container(
-              width: 40.w,
-              height: 40.h,
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 20.r,
-              ),
-            ),
-            if (!isLast)
-              Container(
-                width: 2.w,
-                height: 30.h,
-                color: Colors.grey.withOpacity(0.3),
-              ),
-          ],
-        ),
-        SizedBox(width: 16.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyles.titleSmall(context),
-              ),
-              Text(
-                subtitle,
-                style: TextStyles.bodySmall(context).copyWith(
-                  color: Colors.grey,
-                ),
-              ),
-              SizedBox(height: isLast ? 0 : 16.h),
-            ],
+  Widget _buildCarDetails(BuildContext context, OrderModel order) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        color: MainColors.backgroundColor(context),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: MainColors.shadowColor(context)!, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: MainColors.shadowColor(context)!,
+            spreadRadius: 1.r,
+            blurRadius: 5.r,
+            offset: Offset(0, 3.h),
           ),
-        ),
-      ],
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Car Information',
+            style: TextStyles.titleMedium(context).copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const Divider(
+            color: MainColors.primaryColor,
+          ),
+          _buildDetailRow(context, 'Car model', order.carModel.toString()),
+          _buildDetailRow(context, 'Car mark', order.carMark.toString()),
+          _buildDetailRow(
+              context, 'Car carBoiteVitesse', order.carBoiteVitesse.toString()),
+          _buildDetailRow(
+              context, 'Car carEnergie', order.carEnergie.toString()),
+          _buildDetailRow(context, 'Car Moteur', order.carMoteur.toString()),
+          _buildDetailRow(context, 'Car Year', order.carYear.toString()),
+        ],
+      ),
     );
   }
 
@@ -390,12 +374,11 @@ class OrderdetailsView extends GetView<OrderdetailsController> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 100.w,
+          Expanded(
             child: Text(
               label,
               style: TextStyles.bodyMedium(context).copyWith(
-                color: Colors.grey,
+                color: MainColors.primaryColor,
               ),
             ),
           ),
@@ -453,7 +436,7 @@ class OrderdetailsView extends GetView<OrderdetailsController> {
             child: ElevatedButton(
               onPressed: controller.isProcessing.value
                   ? null
-                  : () => controller.markOrderAsPaid(order.clientId),
+                  : () => controller.markOrderAsPaid(order.id),
               style: ElevatedButton.styleFrom(
                 backgroundColor: MainColors.successColor(context),
                 padding: EdgeInsets.symmetric(vertical: 12.h),

@@ -50,23 +50,77 @@ class ProfileView extends GetView<ProfileController> {
                   children: [
                     _buildProfileHeader(context),
                     Wrap(
+                      spacing: 8.w,
+                      runSpacing: 8.h,
                       children: usercontroller.currentUser.value.brands != null
                           ? usercontroller.currentUser.value.brands!
-                              .map((brand) => Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 4.w, vertical: 4.h),
-                                    child: Chip(
-                                      label: Text(brand.name),
-                                      avatar: brand.image.isNotEmpty
-                                          ? CircleAvatar(
-                                              backgroundImage:
-                                                  NetworkImage(brand.image),
-                                            )
-                                          : null,
+                              .map((brand) => GestureDetector(
+                                    onTap: () {
+                                      // Add functionality for tapping on a brand chip if needed
+                                    },
+                                    child: Container(
+                                      height: 40.h,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: MainColors.shadowColor(
+                                                context)!,
+                                            spreadRadius: 1.r,
+                                            blurRadius: 2.r,
+                                            offset: const Offset(0, 0),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Chip(
+                                        side: BorderSide.none,
+                                        label: Text(
+                                          brand.name,
+                                          style: TextStyles.bodyMedium(context)
+                                              .copyWith(
+                                            color: MainColors.primaryColor,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        avatar: brand.image.isNotEmpty
+                                            ? Container(
+                                                height: 60.r,
+                                                width: 60.r,
+                                                decoration: BoxDecoration(
+                                                  color: MainColors
+                                                      .backgroundColor(context),
+                                                  image: DecorationImage(
+                                                    image: NetworkImage(
+                                                        brand.image),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              )
+                                            : CircleAvatar(
+                                                radius: 28.r,
+                                                backgroundColor:
+                                                    MainColors.primaryColor,
+                                                child: Icon(
+                                                  Icons.directions_car,
+                                                  color: Colors.white,
+                                                  size: 20.sp,
+                                                ),
+                                              ),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 4.w, vertical: 4.h),
+                                      ),
                                     ),
                                   ))
                               .toList()
-                          : [],
+                          : [
+                              Text(
+                                'No brands available',
+                                style: TextStyles.bodySmall(context).copyWith(
+                                  color: MainColors.errorColor(context),
+                                ),
+                              ),
+                            ],
                     ),
                     MyCarsSection(
                       cars: controller.cars,
